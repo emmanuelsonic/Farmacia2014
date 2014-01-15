@@ -33,7 +33,7 @@ class conexion {
 
       // $coneccion=pg_connect("host=192.168.100.253 port=5432 dbname=SIAP user=postgres password=b4s3s14p");       //Conexion Local SIAP
 
-         $coneccion=pg_connect("host=localhost port=5432 dbname=siap user=siap password=s14p");    //Conexion Local SIAP2.0
+         $coneccion=pg_connect("host=192.168.10.23 port=5432 dbname=siap user=siap password=s14p");    //Conexion Local SIAP2.0
 
       // $coneccion=pg_connect("host=192.168.10.23 port=5432 dbname=siap user=siap password=s14p");                 //Conexion siap MINSAL
          return $coneccion;

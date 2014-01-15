@@ -149,13 +149,13 @@ function ValorDivisor($IdMedicina, $IdEstablecimiento, $IdModalidad) {
             $resp = pg_query($querySelect);
 
             while ($Datos = pg_fetch_array($resp)) {
-                $Existencia = $Datos["Existencia"];
+                $Existencia = $Datos["existencia"];
                 if ($Existencia != '') {
 
-                    $Date = explode('-', $Datos["FechaVencimiento"]);
+                    $Date = explode('-', $Datos["fechavencimiento"]);
                     $Fecha = $Date[2] . "-" . $Date[1] . "-" . $Date[0];
-                    $Divisor = $Datos['Divisor'];
-                    $Script = 'javascript:popUp("ActualizaLotes.php?Lote=' . $Datos["Lote"] . '&IdMedicina=' . $Datos["IdMedicina"] . '")';
+                    $Divisor = $Datos['divisor'];
+                    $Script = 'javascript:popUp("ActualizaLotes.php?Lote=' . $Datos["lote"] . '&IdMedicina=' . $Datos["idmedicina"] . '")';
 
                     if ($respDivisor = pg_fetch_array(ValorDivisor($IdMedicina, $_SESSION["IdEstablecimiento"],$IdModalidad))) {
                         $Divisor = $respDivisor[0];
@@ -191,7 +191,7 @@ function ValorDivisor($IdMedicina, $IdEstablecimiento, $IdModalidad) {
 
 
                     $data.= "Existencia: " . $CantidadIntro . "<br>" .
-                            "Lote: <a onclick='" . $Script . "'>" . $Datos["Lote"] . "</a><br>" .
+                            "Lote: <a onclick='" . $Script . "'>" . $Datos["lote"] . "</a><br>" .
                             "Vencimiento: " . $Fecha . "<br><br>";
                 }
             }//While

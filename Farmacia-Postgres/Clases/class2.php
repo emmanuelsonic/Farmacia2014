@@ -5,7 +5,7 @@ class conexion {
 	//public $coneccion;
     function conectar()
       {
-         $coneccion=pg_connect("host=localhost port=5432 dbname=siap user=siap password=s14p");
+         $coneccion=pg_connect("host=192.168.10.23 port=5432 dbname=siap user=siap password=s14p");
          return $coneccion;
       }
       
@@ -545,20 +545,22 @@ function AumentaExistencias($IdMedicina,$cantidad,$ventto,$Lote,$Precio,$IdEstab
 function ActualizarExistencias($IdMedicina,$cantidad,$Lote,$IdEstablecimiento,$IdModalidad){
 $resp=queries::ConfirmaExistencia($IdMedicina,$Lote,$IdEstablecimiento,$IdModalidad);
 $row=pg_fetch_array($resp);
-$IdLote=$row["IdLote"];
-$cantidad_old=$row["Existencia"];
+$IdLote=$row["idlote"];
+$cantidad_old=$row["existencia"];
 $cantidad_new=$cantidad_old+$cantidad;
 if($Lote!='Lote.'){
 $queryUpdate="update farm_entregamedicamento set Existencia='$cantidad_new' 
               where IdMedicina='$IdMedicina' and IdLote='$IdLote' 
               and IdEstablecimiento=".$IdEstablecimiento." 
               and IdModalidad=$IdModalidad";
-
-		$IdEntrega=pg_fetch_array(pg_query("select IdEntrega 
-                                                        from farm_entregamedicamento 
-                                                        where IdMedicina='$IdMedicina' and IdLote='$IdLote' 
-                                                        and IdEstablecimiento=".$IdEstablecimiento." 
-                                                        and IdModalidad=$IdModalidad"));
+              
+              $q="select id as IdEntrega from farm_entregamedicamento 
+                        where IdMedicina='$IdMedicina' and IdLote='$IdLote' 
+                        and IdEstablecimiento=".$IdEstablecimiento." 
+                        and IdModalidad=$IdModalidad";
+		$IdEntrega=pg_fetch_array(pg_query($q));
+                echo $q."FIN";
+                
 		$IdEntrega=$IdEntrega[0];
 
 $queryBitacora="insert into farm_bitacoraentregamedicamento (IdMedicina,Existencia,IdEntregaOrigen,IdLote,FechaHoraIngreso,IdEstablecimiento,IdModalidad) 
@@ -575,15 +577,18 @@ pg_query($queryBitacora);
 function IntroducirExistencias($IdMedicina,$cantidad,$fecha,$Lote,$Precio,$IdEstablecimiento,$IdModalidad){
 	if($Lote!='Lote.' and $fecha!='Fecha Ventto.'){
 	$queryInsert="insert into farm_lotes(Lote,PrecioLote,FechaVencimiento,IdEstablecimiento,IdModalidad) 
-                        values('$Lote','$Precio','$fecha',$IdEstablecimiento,$IdModalidad)";
-	pg_query($queryInsert);	
-	$IdLote=pg_insert_id();
-
+                        values('$Lote','$Precio','$fecha',$IdEstablecimiento,$IdModalidad) RETURNING id";
+	$lote_result=  pg_query($queryInsert);	
+        $insert_row = pg_fetch_row($lote_result);
+        $IdLote = $insert_row[0];      
+	//$IdLote=pg_insert_id();
+        
 	$queryInsert="insert into farm_entregamedicamento(IdMedicina,Existencia,IdLote,IdEstablecimiento,IdModalidad) 
-                                values('$IdMedicina','$cantidad','$IdLote',$IdEstablecimiento,$IdModalidad)";
-		pg_query($queryInsert);
-
-				$IdEntrega=pg_insert_id();
+                                values('$IdMedicina','$cantidad','$IdLote',$IdEstablecimiento,$IdModalidad) RETURNING id";
+		$entrega_result=pg_query($queryInsert);
+                $insert_row2 = pg_fetch_row($entrega_result);
+                $IdEntrega = $insert_row2[0];
+                //$IdEntrega=pg_insert_id();
 
 	$queryBitacora="insert into farm_bitacoraentregamedicamento (IdMedicina,Existencia,IdEntregaOrigen,IdLote,FechaHoraIngreso,IdEstablecimiento,IdModalidad) 
                         values('$IdMedicina','$cantidad','$IdEntrega','$IdLote',now(),$IdEstablecimiento,$IdModalidad)";

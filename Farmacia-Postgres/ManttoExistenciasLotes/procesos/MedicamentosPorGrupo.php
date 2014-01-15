@@ -11,7 +11,7 @@ if (!isset($_SESSION["IdPersonal"])) {
     class ComboLotes {
 
         function VerificaExitenciaLotes($IdMedicina, $IdEstablecimiento,$IdModalidad) {
-            $SQL = "select farm_entregamedicamento.IdMedicina,Existencia, farm_lotes.Id, Lote, Descripcion
+            $SQL = "select farm_entregamedicamento.IdMedicina,Existencia, farm_lotes.Id as idlote, Lote, Descripcion
 
 	from farm_entregamedicamento
 	inner join farm_lotes
@@ -146,16 +146,16 @@ if (!isset($_SESSION["IdPersonal"])) {
                             $existencia_[$i] = 0;
                         } else {
 
-                            if ($respDivisor = pg_fetch_array(ComboLotes::ValorDivisor($Datos["IdMedicina"], $_SESSION["IdEstablecimiento"], $IdModalidad))) {
+                            if ($respDivisor = pg_fetch_array(ComboLotes::ValorDivisor($Datos["idmedicina"], $_SESSION["IdEstablecimiento"], $IdModalidad))) {
                                 $Divisor = $respDivisor[0];
 
-                                if ($data["Existencia"] < 1) {
+                                if ($data["existencia"] < 1) {
                                     //Si la cantidad a mostrar es menor que 1 es decir menor a un frasco
-                                    $TransformaEntero = number_format($data["Existencia"] * $Divisor, 0, '.', ',');
+                                    $TransformaEntero = number_format($data["existencia"] * $Divisor, 0, '.', ',');
                                     $CantidadTransformada = $TransformaEntero . '/' . $Divisor;
                                 } else {
                                     //Si la cantidad es mayor a un frasco se realiza este cambio a quebrados
-                                    $CantidadReal = number_format($data["Existencia"], 2, '.', ',');
+                                    $CantidadReal = number_format($data["existencia"], 2, '.', ',');
                                     $CantidadBase = explode('.', $CantidadReal);
 
                                     $Entero = $CantidadBase[0]; //Faccion ENTERA
@@ -175,14 +175,14 @@ if (!isset($_SESSION["IdPersonal"])) {
                                 }
                                 $CantidadIntro = $CantidadTransformada;
                             } else {
-                                $CantidadIntro = $data["Existencia"] / $Divisor;
+                                $CantidadIntro = $data["existencia"] / $Divisor;
                             }
 
                             $existencia_[$i] = $CantidadIntro;
                         }
                         if ($existencia > 0) {
-                            $Lote[$i] = $data["Lote"];
-                            $FechaVencimiento[$i] = $data["FechaVencimiento"];
+                            $Lote[$i] = $data["lote"];
+                            $FechaVencimiento[$i] = $data["fechavencimiento"];
                         }
                         $i++;
                     }//While para despliegue de Lotes
@@ -237,13 +237,13 @@ if (!isset($_SESSION["IdPersonal"])) {
                                                     if ($respDivisor = pg_fetch_array(ComboLotes::ValorDivisor($IdMedicina, $_SESSION["IdEstablecimiento"],$IdModalidad))) {
                                                         $Divisor = $respDivisor[0];
 
-                                                        if ($rowLotesExiste["Existencia"] < 1) {
+                                                        if ($rowLotesExiste["existencia"] < 1) {
                                                             //Si la cantidad a mostrar es menor que 1 es decir menor a un frasco
-                                                            $TransformaEntero = number_format($rowLotesExiste["Existencia"] * $Divisor, 0, '.', ',');
+                                                            $TransformaEntero = number_format($rowLotesExiste["existencia"] * $Divisor, 0, '.', ',');
                                                             $CantidadTransformada = $TransformaEntero . '/' . $Divisor;
                                                         } else {
                                                             //Si la cantidad es mayor a un frasco se realiza este cambio a quebrados
-                                                            $CantidadReal = number_format($rowLotesExiste["Existencia"], 2, '.', ',');
+                                                            $CantidadReal = number_format($rowLotesExiste["existencia"], 2, '.', ',');
                                                             $CantidadBase = explode('.', $CantidadReal);
 
                                                             $Entero = $CantidadBase[0]; //Faccion ENTERA
@@ -263,12 +263,12 @@ if (!isset($_SESSION["IdPersonal"])) {
                                                         }
                                                         $CantidadIntro = $CantidadTransformada;
                                                     } else {
-                                                        $CantidadIntro = $rowLotesExiste["Existencia"] / $Divisor;
+                                                        $CantidadIntro = $rowLotesExiste["existencia"] / $Divisor;
                                                     }
 
 
 
-                                                    echo "<option value='" . $rowLotesExiste["Lote"] . "'>Existencia: " . $CantidadIntro . " " . $rowLotesExiste["Descripcion"] . " - Lote: " . $rowLotesExiste["Lote"] . "</option>";
+                                                    echo "<option value='" . $rowLotesExiste["lote"] . "'>Existencia: " . $CantidadIntro . " " . $rowLotesExiste["descripcion"] . " - Lote: " . $rowLotesExiste["lote"] . "</option>";//el value se cambio por idlote antes tenia lote
                                                 } while ($rowLotesExiste = pg_fetch_array($respLotesExiste));
                                                 echo "<option value='N'>NUEVO LOTE</option>
 				</select>";

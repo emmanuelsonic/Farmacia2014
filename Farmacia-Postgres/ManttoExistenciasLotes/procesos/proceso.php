@@ -52,11 +52,11 @@ $selectDestino=$_REQUEST["select"]; $opcionSeleccionada=$_REQUEST["opcion"];
 	if($tabla=="mnt_areafarmacia"){
 	$conexion=new conexion;	
 	$conexion->conectar();
-	$consulta=pg_query("SELECT $tabla.IdArea,$tabla.Area
+	$consulta=pg_query("SELECT $tabla.id as IdArea,$tabla.Area
 						   FROM $tabla
 						   inner join mnt_farmacia 
-						   on mnt_farmacia.IdFarmacia=$tabla.IdFarmacia
-						   WHERE mnt_farmacia.IdFarmacia='$opcionSeleccionada'") or die(pg_error());
+						   on mnt_farmacia.Id=$tabla.IdFarmacia
+						   WHERE mnt_farmacia.Id='$opcionSeleccionada'") or die(pg_error());
 	
 	$conexion->desconectar();
 	
