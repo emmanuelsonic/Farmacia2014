@@ -1110,8 +1110,8 @@ where farm_medicinaexistenciaxarea.IdMedicina='$IdMedicina' and farm_medicinaexi
         $querySelect = "select farm_unidadmedidas.UnidadesContenidas
 				from farm_unidadmedidas
 				inner join farm_catalogoproductos
-				on farm_catalogoproductos.IdUnidadMedida=farm_unidadmedidas.IdUnidadMedida
-				where farm_catalogoproductos.IdMedicina='$IdMedicina'";
+				on farm_catalogoproductos.IdUnidadMedida=farm_unidadmedidas.Id
+				where farm_catalogoproductos.Id='$IdMedicina'";
         $resp = pg_fetch_array(pg_query($querySelect));
         return($resp[0]);
     }

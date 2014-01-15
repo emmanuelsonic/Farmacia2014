@@ -121,22 +121,22 @@ if($bandera!=0 and $bandera!=3){
 if($bandera==0){
 /* REFRESCAMIENTO DE LA EXISTENCIAS DESPUES DE UTILIZAR AJAX */
 conexion::conectar();
-$querySelect=" select distinct farm_catalogoproductos.IdMedicina,farm_catalogoproductos.Nombre,farm_catalogoproductos.FormaFarmaceutica,
+$querySelect=" select distinct farm_catalogoproductos.id as IdMedicina,farm_catalogoproductos.Nombre,farm_catalogoproductos.FormaFarmaceutica,
 			farm_catalogoproductos.Concentracion, mnt_areamedicina.IdArea,farm_medicinaexistenciaxarea.*,farm_lotes.*,
 			farm_unidadmedidas.Descripcion,farm_unidadmedidas.UnidadesContenidas as Divisor
 			from farm_catalogoproductos
 			inner join mnt_areamedicina
-			on mnt_areamedicina.IdMedicina=farm_catalogoproductos.IdMedicina
+			on mnt_areamedicina.IdMedicina=farm_catalogoproductos.Id
 			inner join farm_medicinaexistenciaxarea
-			on farm_medicinaexistenciaxarea.IdMedicina=farm_catalogoproductos.IdMedicina
+			on farm_medicinaexistenciaxarea.IdMedicina=farm_catalogoproductos.Id
 			inner join farm_unidadmedidas
-			on farm_unidadmedidas.IdUnidadMedida=farm_catalogoproductos.IdUnidadMedida
+			on farm_unidadmedidas.Id=farm_catalogoproductos.IdUnidadMedida
 			inner join farm_lotes
-			on farm_lotes.IdLote=farm_medicinaexistenciaxarea.IdLote
+			on farm_lotes.Id=farm_medicinaexistenciaxarea.IdLote
 			where mnt_areamedicina.IdArea='$area' 
-			and farm_catalogoproductos.IdMedicina='$IdMedicina' 
+			and farm_catalogoproductos.Id='$IdMedicina' 
 			and farm_medicinaexistenciaxarea.Existencia <> 0
-			and left(FechaVencimiento,7) > left(curdate(),7)
+			and left(to_char(FechaVencimiento,'YYYY-MM-DD'),7) > left(to_char(current_date,'YYYY-MM-DD'),7)
 			and farm_medicinaexistenciaxarea.IdArea='$area'
                         and farm_medicinaexistenciaxarea.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]."
                         and farm_medicinaexistenciaxarea.IdModalidad=$IdModalidad
@@ -144,30 +144,30 @@ $querySelect=" select distinct farm_catalogoproductos.IdMedicina,farm_catalogopr
 $resp=pg_query($querySelect);
 $Info='';
 while($Datos=pg_fetch_array($resp)){
-$Existencia=$Datos["Existencia"];
+$Existencia=$Datos["existencia"];
 	if($Existencia!= '' and $Existencia!='0' and $Existencia!=NULL){
 	
-	$Date=explode('-',$Datos["FechaVencimiento"]);
+	$Date=explode('-',$Datos["fechavencimiento"]);
 	$Fecha=$Date[2]."-".$Date[1]."-".$Date[0];
-	$Unidades=$Datos['Divisor'];
+	$Unidades=$Datos['divisor'];
 //$Script='javascript:popUp("ActualizaLotes.php?Lote='.$Datos["Lote"].'&IdMedicina='.$Datos["IdMedicina"].'&IdArea='.$area.'")';
 	$Script='';
 	
 	
 
-$EliminarExistencia="<u><a style='cursor:hand;' onclick='EliminarMedicamentoExistencia(".$Datos["IdMedicina"].",".$Datos["IdExistencia"].",".$Datos["IdLote"].",".$area.")'>X</a></u>";
+$EliminarExistencia="<u><a style='cursor:hand;' onclick='EliminarMedicamentoExistencia(".$Datos["idmedicina"].",".$Datos["id"].",".$Datos["idlote"].",".$area.")'>X</a></u>";
 
 
-if($respDivisor=pg_fetch_array(ValorDivisor($Datos["IdMedicina"],$_SESSION["IdEstablecimiento"],$IdModalidad))){
+if($respDivisor=pg_fetch_array(ValorDivisor($Datos["idmedicina"],$_SESSION["IdEstablecimiento"],$IdModalidad))){
 		$Divisor=$respDivisor[0];
 
-		if($Datos["Existencia"] < 1){
+		if($Datos["existencia"] < 1){
 			//Si la cantidad a mostrar es menor que 1 es decir menor a un frasco
-		   $TransformaEntero=number_format($Datos["Existencia"]*$Divisor,0,'.',',');
+		   $TransformaEntero=number_format($Datos["existencia"]*$Divisor,0,'.',',');
 			$CantidadTransformada=$TransformaEntero.'/'.$Divisor;
 		}else{
 			//Si la cantidad es mayor a un frasco se realiza este cambio a quebrados
-			$CantidadReal=number_format($Datos["Existencia"],2,'.',',');	
+			$CantidadReal=number_format($Datos["existencia"],2,'.',',');	
 		$CantidadBase=explode('.',$CantidadReal);
 		
 		    $Entero=$CantidadBase[0];//Faccion ENTERA
@@ -185,12 +185,12 @@ if($respDivisor=pg_fetch_array(ValorDivisor($Datos["IdMedicina"],$_SESSION["IdEs
 	   $CantidadIntro=$CantidadTransformada;
 		
 	}else{
-	   $CantidadIntro=$Datos["Existencia"]/$Unidades;
+	   $CantidadIntro=$Datos["existencia"]/$Unidades;
 	}
 	$existencia=$CantidadIntro;
 
 	$Info.= $EliminarExistencia." Existencia: ".$existencia."<br>".
-	"Lote: <a onclick='".$Script."'>".$Datos["Lote"]."</a><br>".
+	"Lote: <a onclick='".$Script."'>".$Datos["lote"]."</a><br>".
 	"Vencimiento: ".$Fecha."<br><br>";
 	}
 
@@ -209,29 +209,29 @@ conexion::conectar();
 	$querySelect="select farm_entregamedicamento.IdMedicina,Existencia,UnidadesContenidas, Descripcion
 				from farm_entregamedicamento
 				inner join farm_lotes
-				on farm_lotes.IdLote=farm_entregamedicamento.IdLote
+				on farm_lotes.Id=farm_entregamedicamento.IdLote
 				inner join farm_catalogoproductos cat
-				on cat.IdMedicina=farm_entregamedicamento.IdMedicina
+				on cat.Id=farm_entregamedicamento.IdMedicina
 				inner join farm_unidadmedidas um
-				on um.IdUnidadMedida=cat.IdUnidadMedida
-				where farm_lotes.IdLote=".$IdLote."
+				on um.Id=cat.IdUnidadMedida
+				where farm_lotes.Id=".$IdLote."
                                 and farm_entregamedicamento.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]." 
                                 and farm_entregamedicamento.IdModalidad=$IdModalidad";
 	$Datos=pg_fetch_array(pg_query($querySelect));
-	if($Datos["Existencia"]!='' and $Datos["Existencia"]!=NULL){
-		$Divisor=$Datos["UnidadesContenidas"];
-		$Descripcion=$Datos["Descripcion"];
+	if($Datos["existencia"]!='' and $Datos["existencia"]!=NULL){
+		$Divisor=$Datos["unidadescontenidas"];
+		$Descripcion=$Datos["descripcion"];
 
-	if($respDivisor=pg_fetch_array(ValorDivisor($Datos["IdMedicina"],$_SESSION["IdEstablecimiento"],$IdModalidad))){
+	if($respDivisor=pg_fetch_array(ValorDivisor($Datos["idmedicina"],$_SESSION["IdEstablecimiento"],$IdModalidad))){
 		$Divisor=$respDivisor[0];
 
-		if($Datos["Existencia"] < 1){
+		if($Datos["existencia"] < 1){
 			//Si la cantidad a mostrar es menor que 1 es decir menor a un frasco
-		   $TransformaEntero=number_format($Datos["Existencia"]*$Divisor,0,'.',',');
+		   $TransformaEntero=number_format($Datos["existencia"]*$Divisor,0,'.',',');
 			$CantidadTransformada=$TransformaEntero.'/'.$Divisor;
 		}else{
 			//Si la cantidad es mayor a un frasco se realiza este cambio a quebrados
-			$CantidadReal=number_format($Datos["Existencia"],2,'.',',');	
+			$CantidadReal=number_format($Datos["existencia"],2,'.',',');	
 		$CantidadBase=explode('.',$CantidadReal);
 		
 		    $Entero=$CantidadBase[0];//Faccion ENTERA
@@ -249,7 +249,7 @@ conexion::conectar();
 	   $CantidadIntro=$CantidadTransformada;
 		
 	}else{
-	   $CantidadIntro=$Datos["Existencia"]/$Divisor;
+	   $CantidadIntro=$Datos["existencia"]/$Divisor;
 	}
 	$existencia=$CantidadIntro;
 	

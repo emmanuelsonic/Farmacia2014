@@ -30,14 +30,14 @@ $IdMedicina=$_GET["IdMedicina"];
 $Lote=$_GET["Lote"];
 
 $resp=Actualiza::ObtenerMedicinaInformacion($IdMedicina,$Lote,$_SESSION["IdEstablecimiento"],$IdModalidad);
-$NombreMedicamento=$resp["Nombre"];
-$Concentracion=$resp["Concentracion"];
-$PrecioLote=$resp["PrecioLote"];
-$UnidadMedida=$resp["Descripcion"];
-$Divisor=$resp["Divisor"];
+$NombreMedicamento=$resp["nombre"];
+$Concentracion=$resp["concentracion"];
+$PrecioLote=$resp["preciolote"];
+$UnidadMedida=$resp["descripcion"];
+$Divisor=$resp["divisor"];
 $ano=$resp["ano"];
-$IdLote=$resp["IdLote"];
-$Existencia=$resp["Existencia"];
+$IdLote=$resp["idlote"];
+$Existencia=$resp["existencia"];
 $mes=meses::NombreMes($resp["mes"]);//nombre de mes a espa�ol
 ?>
 <table width="654" border="1">
