@@ -1238,7 +1238,7 @@ where farm_medicinaexistenciaxarea.IdMedicina='$IdMedicina' and farm_medicinaexi
         if ($fecha == 'Fecha Ventto.') {
             $Query = "select FechaVencimiento 
                 from farm_lotes 
-                where IdLote=" . $Lote . " and IdEstablecimiento=" . $IdEstablecimiento . "
+                where Id=" . $Lote . " and IdEstablecimiento=" . $IdEstablecimiento . "
                 and IdModalidad=$IdModalidad";
             $resp = pg_query($Query);
             if ($row = pg_fetch_array($resp)) {
@@ -1270,14 +1270,17 @@ where farm_medicinaexistenciaxarea.IdMedicina='$IdMedicina' and farm_medicinaexi
                 pg_query($UpdateExistencia1);
 
                 $queryInsertExistencia1 = "insert into farm_medicinaexistenciaxarea(IdMedicina,IdArea,Existencia,IdLote,IdEstablecimiento,IdModalidad) 
-                                                                                   values('$IdMedicina','$IdArea','$CantidadLote1','$Lote',$IdEstablecimiento,$IdModalidad)";
-                pg_query($queryInsertExistencia1);
+                                                                                   values('$IdMedicina','$IdArea','$CantidadLote1','$Lote',$IdEstablecimiento,$IdModalidad) RETURNING id";
+                //pg_query($queryInsertExistencia1);
 
+                $entrega_result=pg_query($queryInsertExistencia1);	
+                $insert_row = pg_fetch_row($entrega_result);
+                $IdEntrega = $insert_row[0];
                 //Ultimo IdExistencia ingresado
-                $IdEntrega = pg_insert_id();
+                //$IdEntrega = pg_insert_id();
 
                 $queryInsertExistencia2 = "insert into farm_bitacoramedicinaexistenciaxarea(IdMedicina,IdArea,Existencia,IdExistenciaOrigen,IdLote,FechaHoraIngreso,IdEstablecimiento,IdModalidad) 
-                                                                                           values('$IdMedicina','$IdArea','$CantidadLote1','$IdEntrega','$Lote',now(),$IdEstablecimiento,$IdModalidad)";
+                                                                                       values('$IdMedicina','$IdArea','$CantidadLote1','$IdEntrega','$Lote',now(),$IdEstablecimiento,$IdModalidad)";
                 pg_query($queryInsertExistencia2);
                 /* 	USO DEL SEGUNDO LOTE	 */
                 $SelectLote = "select Existencia, farm_lotes.Id
@@ -1297,11 +1300,13 @@ where farm_medicinaexistenciaxarea.IdMedicina='$IdMedicina' and farm_medicinaexi
                 if ($IdLote2 != '' and $IdLote2 != '0' and $IdLote2 != NULL) {
 
                     $queryInsertExistencia2 = "insert into farm_medicinaexistenciaxarea(IdMedicina,IdArea,Existencia,IdLote,IdEstablecimiento,IdModalidad) 
-                                                                                           values('$IdMedicina','$IdArea','$DiferenciaLotes','$IdLote2',$IdEstablecimiento,$IdModalidad)";
-                    pg_query($queryInsertExistencia2);
-
+                                                                                           values('$IdMedicina','$IdArea','$DiferenciaLotes','$IdLote2',$IdEstablecimiento,$IdModalidad) RETURNING id";
+                    //pg_query($queryInsertExistencia2);
+                    $entrega_result2=pg_query($queryInsertExistencia2);	
+                    $insert_row2 = pg_fetch_row($entrega_result2);
+                    $IdEntrega = $insert_row2[0];
                     //Ultimo IdExistencia ingresado
-                    $IdEntrega = pg_insert_id();
+                    //$IdEntrega = pg_insert_id();
 
                     $queryInsertExistencia3 = "insert into farm_bitacoramedicinaexistenciaxarea(IdMedicina,IdArea,Existencia,IdExistenciaOrigen,IdLote,FechaHoraIngreso,IdEstablecimiento,IdModalidad) 
                                                                                                    values('$IdMedicina','$IdArea','$DiferenciaLotes','$IdEntrega','$IdLote2',now(),$IdEstablecimiento,$IdModalidad)";
@@ -1323,11 +1328,12 @@ where farm_medicinaexistenciaxarea.IdMedicina='$IdMedicina' and farm_medicinaexi
                 pg_query($UpdateExistencia1);
 
                 $queryInsertExistencia1 = "insert into farm_medicinaexistenciaxarea(IdMedicina,IdArea,Existencia,IdLote,IdEstablecimiento,IdModalidad) 
-                                                                                   values('$IdMedicina','$IdArea','$cantidad','$Lote',$IdEstablecimiento,$IdModalidad)";
-                pg_query($queryInsertExistencia1);
-
+                                                                                   values('$IdMedicina','$IdArea','$cantidad','$Lote',$IdEstablecimiento,$IdModalidad) RETURNING id";
+                $entrega_result=pg_query($queryInsertExistencia1);	
+                $insert_row = pg_fetch_row($entrega_result);
+                $IdEntrega = $insert_row[0];
                 //Ultimo IdExistencia ingresado
-                $IdEntrega = pg_insert_id();
+               // $IdEntrega = pg_insert_id();
 
                 $queryInsertExistencia3 = "insert into farm_bitacoramedicinaexistenciaxarea(IdMedicina,IdArea,Existencia,IdExistenciaOrigen,IdLote,FechaHoraIngreso,IdEstablecimiento,IdModalidad) 
                                                                                            values('$IdMedicina','$IdArea','$cantidad','$IdEntrega','$Lote',now(),$IdEstablecimiento,$IdModalidad)";

@@ -37,8 +37,8 @@ function EliminarExistenciaxArea($IdMedicina,$IdExistenciaArea,$IdLote,$IdArea,$
         and IdEstablecimiento=".$IdEstablecimiento;
 
     $resp2=pg_fetch_array(pg_query($SQL2));
-	$ExistenciaBodega=$resp2["Existencia"];
-	$IdEntrega=$resp2["IdEntrega"];
+	$ExistenciaBodega=$resp2["existencia"];
+	$IdEntrega=$resp2["id"];
 
 	$ExistenciaBodegaNueva=$ExistenciaBodega+$ExistenciaArea;
 	
@@ -46,7 +46,6 @@ function EliminarExistenciaxArea($IdMedicina,$IdExistenciaArea,$IdLote,$IdArea,$
 	pg_query($SQL3);
 
     $SQL4="delete from farm_medicinaexistenciaxarea where Id=".$IdExistenciaArea;
-    echo $SQL4;
 	pg_query($SQL4);
     $SQL5="update farm_bitacoramedicinaexistenciaxarea set IdExistenciaOrigen=NULL where IdExistenciaOrigen=".$IdExistenciaArea;
 	pg_query($SQL5);

@@ -12,6 +12,7 @@ case 1:
 	$IdLote=$_GET["IdLote"];
 	$IdArea=$_GET["IdArea"];
 	$IdExistenciaArea=$_GET["IdExistencia"];
+        
 		Actualiza::EliminarExistenciaxArea($IdMedicina,$IdExistenciaArea,$IdLote,$IdArea,$_SESSION["IdEstablecimiento"]);
 		
 		//echo "Eliminado".$IdMedicina." Lote".$IdLote." Area:".$IdArea;
