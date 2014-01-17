@@ -55,25 +55,25 @@ switch($Bandera){
 		
 		while($row=pg_fetch_array($resp)){
 			
-			if($row["HabilitadoFarmacia"]=='H'){
+			if($row["habilitadofarmacia"]=='H'){
 				$CuentaEstado='HABILITADO';
 			}else{
 				$CuentaEstado='DESHABILITADO';
 			}
 			
 			
-			if($row["CodigoFarmacia"]==NULL or $row["CodigoFarmacia"]=='0' or $row["CodigoFarmacia"]==''){
+			if($row["codigo_farmacia"]==NULL or $row["codigo_farmacia"]=='0' or $row["codigo_farmacia"]==''){
 				$CodigoFarmacia='0';
 			}else{
-				$CodigoFarmacia=$row["CodigoFarmacia"];
+				$CodigoFarmacia=$row["codigo_farmacia"];
 			}
 			
 			
-			$NombreSubEspecialidad=htmlentities($row["SubServicio"]);
+			$NombreSubEspecialidad=htmlentities($row["subservicio"]);
 			
 			
 			
-			$datos.="<tr class='FONDO'><td align='center' style='vertical-align:middle;'><div id='Contenedor".$row["IdSubServicio"]."'><div id='Codigo".$row["IdSubServicio"]."' style='border:#000000 dashed thin; width:75px;' onmouseover='this.style.background=\"#CCCC66\"' onmouseout='this.style.background=\"#EEEECC\"' onclick='javascript:CodigoMedico(\"Codigo".$row[0]."\",2)' align='center'>".$CodigoFarmacia."</div></div></td><td>".$NombreSubEspecialidad."</td><td align='center' style='vertical-align:middle;'>".$CuentaEstado."</td></tr>";
+			$datos.="<tr class='FONDO'><td align='center' style='vertical-align:middle;'><div id='Contenedor".$row["idsubservicio"]."'><div id='Codigo".$row["idsubservicio"]."' style='border:#000000 dashed thin; width:75px;' onmouseover='this.style.background=\"#CCCC66\"' onmouseout='this.style.background=\"#EEEECC\"' onclick='javascript:CodigoMedico(\"Codigo".$row[0]."\",2)' align='center'>".$CodigoFarmacia."</div></div></td><td>".$NombreSubEspecialidad."</td><td align='center' style='vertical-align:middle;'>".$CuentaEstado."</td></tr>";
 			
 		}
 		
@@ -133,16 +133,16 @@ switch($Bandera){
 		
 		while($row=pg_fetch_array($resp)){
 			
-			if($row["HabilitadoFarmacia"]=='H'){
+			if($row["habilitadofarmacia"]=='H'){
 				$CuentaEstado='HABILITADO';
 			}else{
 				$CuentaEstado='DESHABILITADO';
 			}
 			
-			if($row["CodigoFarmacia"]==NULL or $row["CodigoFarmacia"]=='0' or $row["CodigoFarmacia"]==''){
+			if($row["codigo_farmacia"]==NULL or $row["codigo_farmacia"]=='0' or $row["codigo_farmacia"]==''){
 				$CodigoFarmacia='0';
 			}else{
-				$CodigoFarmacia=$row["CodigoFarmacia"];
+				$CodigoFarmacia=$row["codigo_farmacia"];
 			}
 			
 			$datos.="<tr class='FONDO'><td align='center' style='vertical-align:middle;'><div id='Contenedor".$row[0]."'><div id='Codigo".$row[0]."' style='border:#000000 dashed thin; width:75px;' onmouseover='this.style.background=\"#CCCC66\"' onmouseout='this.style.background=\"#EEEECC\"' onclick='javascript:CodigoMedico(\"Codigo".$row[0]."\",2)' align='center'>".$CodigoFarmacia."</div></div></td><td>".htmlentities($row[3])."</td><td align='center' style='vertical-align:middle;'>".$CuentaEstado."</td></tr>";

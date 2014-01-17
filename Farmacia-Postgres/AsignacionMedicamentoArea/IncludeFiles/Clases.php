@@ -100,6 +100,7 @@ class Farmacia{
 	$SQL="insert into mnt_areamedicina(IdMedicina,IdArea,IdEstablecimiento,IdModalidad) 
                                     values('$IdMedicina','$IdArea','$IdEstablecimiento','$IdModalidad')";
 	$resp=pg_query($SQL);
+        echo "consulta aca ".$SQL;
 	return($resp);
     }
 

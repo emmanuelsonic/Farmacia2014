@@ -79,6 +79,7 @@ switch($_GET["Bandera"]){
 		    <tr class='FONDO2'><th style='border-left:solid; border-right:solid; border-bottom:solid;'>CODIGO</th><th style=' border-right:solid;border-bottom:solid;'>MEDICAMENTO</th><th style=' border-right:solid;border-bottom:solid;'>CONCENTRACION</th><th style=' border-right:solid;border-bottom:solid;'>PRESENTACION</th><th style=' border-right:solid;border-bottom:solid;'>HABILITAR<br>[<input type='checkbox' id='all' name='all' onclick='SeleccionaTodo();'> TODO]</th><th style=' border-right:solid;border-bottom:solid;'>AREA DISPENSADA</th></tr>";
 	   	do{
                     $IdMedicina=$row["idmedicina"];
+                    echo "MEDICINA".$IdMedicina;
 		    $confirmacion=$farmacia->MedicamentoHabilitado($row["idmedicina"],$_GET["IdArea"],$_SESSION["IdEstablecimiento"],$_SESSION["IdModalidad"]);
 		    
 		    if($confirmacion!=NULL and $confirmacion!=''){
