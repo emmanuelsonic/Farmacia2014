@@ -48,7 +48,60 @@ class ReporteGeneral {
 
     function ObtenerRecetas($IdSubEspecialidad, $FechaInicial, $FechaFinal) {
 
+        $query="select sec_historial_clinico.IdSubServicio,Codigo_Farmacia,
+                        sum(case when IdFarmacia=1 then 1 else 0 end) as Central,
+                        sum(case when IdFarmacia=2 then 1 else 0 end) as Externa,
+                        sum(case when IdFarmacia=3 then 1 else 0 end) as Emergencia,
+                        sum(case when IdFarmacia=4 then 1 else 0 end) as Bodega,
+                        sum(case when IdFarmacia=1 then (CantidadDespachada/UnidadesContenidas)*PrecioLote else 0 end)as CostoCentral,
+                        sum(case when IdFarmacia=2 then (CantidadDespachada/UnidadesContenidas)*PrecioLote else 0 end)as CostoExterna,
+                        sum(case when IdFarmacia=3 then (CantidadDespachada/UnidadesContenidas)*PrecioLote else 0 end)as CostoEmergencia,
+                        sum(case when IdFarmacia=4 then (CantidadDespachada/UnidadesContenidas)*PrecioLote else 0 end)as CostoBodega
 
+                        from farm_medicinadespachada
+                        inner join farm_medicinarecetada
+                        on farm_medicinarecetada.Id=farm_medicinadespachada.IdMedicinaRecetada
+                        inner join farm_recetas
+                        on farm_recetas.Id= farm_medicinarecetada.IdReceta
+                        inner join sec_historial_clinico
+                        on sec_historial_clinico.Id=farm_recetas.IdHistorialClinico
+
+
+                        --inner join mnt_subservicio
+                        --on mnt_subservicio.IdSubServicio=sec_historial_clinico.IdSubServicio
+                        --cambio a consulta agrgando la tabla 3
+                        INNER JOIN mnt_aten_area_mod_estab mnt_3 on mnt_3.id=sec_historial_clinico.IdSubServicio
+                        INNER JOIN mnt_area_mod_estab mnt_2 on mnt_3.id_area_mod_estab = mnt_2.id
+                        INNER JOIN ctl_atencion ctl on mnt_3.id_atencion = ctl.id
+                        INNER JOIN ctl_area_atencion ctl_a on mnt_2.id_area_atencion = ctl_a.id
+                        LEFT JOIN mnt_servicio_externo_establecimiento mnt_ser_estab on mnt_2.id_servicio_externo_estab = mnt_ser_estab.id
+                        LEFT JOIN mnt_servicio_externo mnt_ser on mnt_ser_estab.id_servicio_externo = mnt_ser.id
+                        INNER JOIN mnt_modalidad_establecimiento mnt_mod_estab on mnt_2.id_modalidad_estab = mnt_mod_estab.id
+                        INNER JOIN ctl_modalidad ctl_mod on mnt_mod_estab.id_modalidad = ctl_mod.id
+
+
+                        --****************************************
+
+                        inner join farm_catalogoproductos
+                        on farm_catalogoproductos.Id=farm_medicinarecetada.IdMedicina
+                        inner join farm_unidadmedidas
+                        on farm_unidadmedidas.Id=farm_catalogoproductos.IdUnidadMedida
+                        inner join farm_lotes
+                        on farm_lotes.Id = farm_medicinadespachada.IdLote
+                        inner join mnt_grupoterapeutico
+                        on farm_catalogoproductos.IdTerapeutico=mnt_grupoterapeutico.Id
+
+                        inner join farm_catalogoproductosxestablecimiento fcpe
+                        on fcpe.IdMedicina=farm_catalogoproductos.Id
+
+                        where Fecha between '$FechaInicial' and '$FechaFinal'
+                        and (farm_recetas.IdEstado='E' or farm_recetas.IdEstado='ER')
+                        and farm_medicinarecetada.IdEstado<>'I'
+                        and sec_historial_clinico.IdSubServicio=$IdSubEspecialidad
+                        --AND mnt_3.id_establecimiento =
+                        group by sec_historial_clinico.IdSubServicio,Codigo_Farmacia
+                        order by Codigo_Farmacia";
+        /*falta comprobar esta consulta
         $query = "select sec_historial_clinico.IdSubServicio,CodigoFarmacia,sum(if(IdFarmacia=1,1,0)) as Central,
 				sum(if(IdFarmacia=2,1,0)) as Externa,sum(if(IdFarmacia=3,1,0)) as Emergencia,sum(if(IdFarmacia=4,1,0)) as Bodega,
 				sum(if(IdFarmacia=1,(CantidadDespachada/UnidadesContenidas)*PrecioLote,0))as CostoCentral,
@@ -86,6 +139,8 @@ class ReporteGeneral {
                         
 				group by sec_historial_clinico.IdSubServicio
 				order by CodigoFarmacia";
+         * 
+         */
 
         $resp = pg_query($query);
         return($resp);

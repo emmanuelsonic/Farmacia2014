@@ -14,7 +14,7 @@ function ActualizaDatosLotes($Lote,$PrecioLote,$Vencimiento,$LoteOld,$IdEstablec
 		}
 		
 		if($Vencimiento!='Ventto.'){
-			$queryUpdate="update farm_lotes set FechaVencimiento='$Vencimiento' where IdLote='$LoteOld' and IdEstablecimiento=".$IdEstablecimiento;
+			$queryUpdate="update farm_lotes set FechaVencimiento='$Vencimiento' where Id='$LoteOld' and IdEstablecimiento=".$IdEstablecimiento;
 			pg_query($queryUpdate);
 		}
 		
@@ -29,16 +29,16 @@ function ExisteLote($Lote,$IdEstablecimiento){
 
 function FechaVencimiento($LoteOld,$FechaVencimiento){
 
-   $SQL1="select concat_ws('-',year(curdate()),month(curdate()),'25') as X";
+   $SQL1="select concat_ws('-',to_char(current_date,'YYYY'),to_char(current_date,'MM'),'25') as X";
 	$t=pg_fetch_array(pg_query($SQL1));
  	$FechaVencimientoActual=$t[0];
    
      // $SQL="select if(datediff('$FechaVencimiento','$FechaVencimientoActual') < 0, 'N' ,'S') as Ok";
-      $SQL2="select if(datediff('$FechaVencimiento','$FechaVencimientoActual') < 0,'N','S') as X";
+      $SQL2="select case when(TO_DATE('$FechaVencimiento','YYYY-MM-DD')-TO_DATE('$FechaVencimientoActual','YYYY-MM-DD')) < 0 then 'N' else 'S' end as X";
      // $resp=pg_fetch_array(pg_query($SQL));
       $resp2=pg_fetch_array(pg_query($SQL2));
 	 //$tx[0]=$resp[0];
-	 $tx=$resp2["X"];
+	 $tx=$resp2["x"];
       return($tx);
   
 }

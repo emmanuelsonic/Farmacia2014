@@ -179,6 +179,7 @@ req.send(null);
 function HabilitarMedicamento(IdMedicina){
     var req = Inint_AJAX();
 	var IdArea= document.getElementById('IdArea').value;
+       
     req.onreadystatechange = function () {
  	if (req.readyState==1) {
 	

@@ -39,7 +39,7 @@ class Monitoreo {
 				inner join farm_medicinarecetada
 				on farm_recetas.Id=farm_medicinarecetada.Id
 				inner join sec_historial_clinico
-				on sec_historial_clinico.Idhistorialclinico=farm_recetas.IdHistorialClinico
+				on sec_historial_clinico.Id=farm_recetas.IdHistorialClinico
 				
 				where FechaHoraReg is not null
 				and date(FechaHoraReg)=current_date

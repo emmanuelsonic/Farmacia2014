@@ -76,14 +76,14 @@ class ReporteFarmacias{
 		if($Bandera==1){$ConsumoReal="and farm_medicinarecetada.IdEstado<>'I'";}else{$ConsumoReal="";}
 
 	   $SQL="select farm_medicinarecetada.IdMedicina,sum(CantidadDespachada)/UnidadesContenidas as Total,
-		farm_lotes.IdLote,UnidadesContenidas,Lote,PrecioLote,
+		farm_lotes.id as IdLote,UnidadesContenidas,Lote,PrecioLote,
 		(sum(CantidadDespachada)/UnidadesContenidas)*PrecioLote as Costo
 
 		from farm_recetas
 		inner join farm_medicinarecetada
 		on farm_medicinarecetada.IdReceta=farm_recetas.Id
 		inner join farm_medicinadespachada
-		on farm_medicinadespachada.IdMedicinaRecetada=farm_medicinarecetada.IdMedicinaRecetada
+		on farm_medicinadespachada.IdMedicinaRecetada=farm_medicinarecetada.Id
 		inner join farm_lotes
 		on farm_lotes.Id=farm_medicinadespachada.IdLote
 		inner join farm_catalogoproductos
@@ -99,7 +99,8 @@ class ReporteFarmacias{
                 and farm_medicinadespachada.IdModalidad=$IdModalidad
 		".$Complemento."
 		".$ConsumoReal."
-		group by farm_medicinarecetada.IdMedicina,farm_lotes.Id";
+		group by farm_medicinarecetada.IdMedicina,farm_lotes.Id,farm_unidadmedidas.unidadescontenidas";
+               
 		
 		$resp=pg_query($SQL);
 		return($resp);

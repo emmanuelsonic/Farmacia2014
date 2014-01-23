@@ -28,6 +28,37 @@ $IdModalidad=$_SESSION["IdModalidad"];
 
 function generaSelect2($IdEstablecimiento,$IdModalidad){ //creacioon de combo para las Regiones
 	conexion::conectar();
+        $sql="SELECT mnt_3.id as IdSubServicio,
+                   CASE
+                   WHEN mnt_3.nombre_ambiente IS NOT NULL
+                   THEN  
+                    CASE WHEN mnt_ser.abreviatura IS NOT NULL
+                    THEN ctl_a.nombre ||'-->'|| mnt_ser.abreviatura ||'-->' ||mnt_3.nombre_ambiente
+                    ELSE ctl_a.nombre ||'-->' ||mnt_3.nombre_ambiente
+                    END
+
+                   ELSE
+                    CASE WHEN mnt_ser.abreviatura IS NOT NULL
+                    THEN ctl_a.nombre ||'-->'|| mnt_ser.abreviatura ||'-->' || ctl.nombre
+                    ELSE ctl_a.nombre ||'-->' || ctl.nombre
+                    END
+                   END AS SubServicio
+
+                   FROM mnt_aten_area_mod_estab mnt_3
+                   INNER JOIN mnt_area_mod_estab mnt_2 on mnt_3.id_area_mod_estab = mnt_2.id
+                   INNER JOIN ctl_atencion ctl on mnt_3.id_atencion = ctl.id
+                   INNER JOIN ctl_area_atencion ctl_a on mnt_2.id_area_atencion = ctl_a.id
+                   LEFT JOIN mnt_servicio_externo_establecimiento mnt_ser_estab on mnt_2.id_servicio_externo_estab = mnt_ser_estab.id
+                   LEFT JOIN mnt_servicio_externo mnt_ser on mnt_ser_estab.id_servicio_externo = mnt_ser.id
+                   INNER JOIN mnt_modalidad_establecimiento mnt_mod_estab on mnt_2.id_modalidad_estab = mnt_mod_estab.id
+                   INNER JOIN ctl_modalidad ctl_mod on mnt_mod_estab.id_modalidad = ctl_mod.id
+                   WHERE ctl_mod.id =$IdModalidad
+                   AND mnt_3.id_establecimiento =".$IdEstablecimiento."
+                   
+                   and Codigo_Farmacia is not null
+			order by mnt_3.id";
+        $consulta=  pg_query($sql);
+        /* estado anterior de la consulta
 	$consulta=pg_query("select mssxe.IdSubServicioxEstablecimiento,NombreServicio,NombreSubServicio
 			from mnt_subservicio mss
                         inner join mnt_subservicioxestablecimiento mssxe
@@ -43,12 +74,14 @@ function generaSelect2($IdEstablecimiento,$IdModalidad){ //creacioon de combo pa
                         and msxe.IdModalidad=$IdModalidad
 			and CodigoFarmacia is not null
 		");
+         * 
+         */
 	conexion::desconectar();
 	// Voy imprimiendo el primer select compuesto por los paises
 	echo "<select name='IdSubEspecialidad' id='IdSubEspecialidad'>";
 	echo "<option value='0'>[General ...]</option>";
 	while($registro=pg_fetch_row($consulta)){
-		echo "<option value='".$registro[0]."'>[".$registro[1]."]  ".$registro[2]."</option>";
+		echo "<option value='".$registro[0]."'>".$registro[1]."</option>";
 	}
 	echo "</select>";
 }

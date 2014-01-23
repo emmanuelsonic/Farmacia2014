@@ -124,14 +124,14 @@ if (isset($_SESSION["nivel"])) {
                     $TotalConsumo2 = 0;
                     while ($rowMedicina = pg_fetch_array($RespMedicina)) {
 
-                        $IdMedicina = $rowMedicina["IdMedicina"];
+                        $IdMedicina = $rowMedicina["idmedicina"];
 
-                        $Codigo = $rowMedicina["Codigo"];
-                        $Nombre = $rowMedicina["Nombre"];
-                        $Concentracion = $rowMedicina["Concentracion"];
-                        $Presentacion = $rowMedicina["FormaFarmaceutica"] . ' - ' . $rowMedicina["Presentacion"];
-                        $DescripcionUnidadMedida = $rowMedicina["Descripcion"];
-                        $UnidadesContenidas = $rowMedicina["UnidadesContenidas"];
+                        $Codigo = $rowMedicina["codigo"];
+                        $Nombre = $rowMedicina["nombre"];
+                        $Concentracion = $rowMedicina["concentracion"];
+                        $Presentacion = $rowMedicina["formafarmaceutica"] . ' - ' . $rowMedicina["presentacion"];
+                        $DescripcionUnidadMedida = $rowMedicina["descripcion"];
+                        $UnidadesContenidas = $rowMedicina["unidadescontenidas"];
 
                         /*                         * ******	CONSUMO DE MEDICAMENTOS ************** */
 

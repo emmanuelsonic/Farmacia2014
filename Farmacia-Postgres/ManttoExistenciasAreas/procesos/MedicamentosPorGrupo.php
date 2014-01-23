@@ -54,7 +54,7 @@ while($DataGrupo=pg_fetch_array($Grupo)){
  <?php  if($Nombre!=''){$comp=" and (Nombre like '%$Nombre%' or Codigo='$Nombre')";}else{$comp="";}
 
 			$querySelect="select distinct farm_catalogoproductos.Codigo,
-			farm_catalogoproductos.Id,farm_catalogoproductos.Nombre,farm_catalogoproductos.FormaFarmaceutica,
+			farm_catalogoproductos.Id as idmedicina,farm_catalogoproductos.Nombre,farm_catalogoproductos.FormaFarmaceutica,
 			farm_catalogoproductos.Concentracion, mnt_areamedicina.IdArea, Presentacion
 			from farm_catalogoproductos
 			inner join mnt_areamedicina
@@ -76,7 +76,7 @@ while($DataGrupo=pg_fetch_array($Grupo)){
 			 $Nombre=htmlentities($Datos["nombre"]);
 			 $Concentracion=$Datos["concentracion"];
 			 $Forma=$Datos["formafarmaceutica"].' - '.$Datos["presentacion"];
-			 $IdMedicina=$Datos["id"];
+			 $IdMedicina=$Datos["idmedicina"];
 			 
 			 /*Unidad de Medida*/
 			$data2=pg_fetch_array(pg_query("select farm_unidadmedidas.Descripcion,
@@ -88,20 +88,21 @@ while($DataGrupo=pg_fetch_array($Grupo)){
 			$UnidadMedida=$data2["descripcion"];
 			$Unidades=$data2["divisor"];
 			/**************************/
-	
-			$RespEx=pg_query("select farm_medicinaexistenciaxarea.*,farm_lotes.*
+                        $existencia_total="select farm_medicinaexistenciaxarea.id as idexistencia,farm_medicinaexistenciaxarea.*,farm_lotes.*
 			from farm_medicinaexistenciaxarea
 			inner join farm_catalogoproductos
 			on farm_catalogoproductos.Id=farm_medicinaexistenciaxarea.IdMedicina
 			inner join farm_lotes
 			on farm_lotes.Id=farm_medicinaexistenciaxarea.IdLote
-			where farm_medicinaexistenciaxarea.Id='$area' and farm_medicinaexistenciaxarea.IdMedicina='$IdMedicina'
+			where farm_medicinaexistenciaxarea.Idarea='$area' and farm_medicinaexistenciaxarea.IdMedicina='$IdMedicina'
 			and farm_medicinaexistenciaxarea.Existencia <> '0' 
                         and farm_medicinaexistenciaxarea.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]."
                         and farm_medicinaexistenciaxarea.IdModalidad=$IdModalidad
                         
 			and left(to_char(FechaVencimiento,'YYYY-MM-DD'),7) >= left(to_char(current_date,'YYYY/MM/DD'),7)
-			order by farm_lotes.FechaVencimiento");
+			order by farm_lotes.FechaVencimiento";
+                        
+			$RespEx=pg_query($existencia_total);
 			$i=0;
 			$Lote="";$existencia_="";$FechaVencimiento="";
 					while($data=pg_fetch_array($RespEx)){
@@ -114,12 +115,12 @@ while($DataGrupo=pg_fetch_array($Grupo)){
 						
    if($existencia==''){$existencia_[$i]=0;}else{
 
-	if($respDivisor=pg_fetch_array(Actualiza::ValorDivisor($Datos["IdMedicina"],$IdModalidad))){
+	if($respDivisor=pg_fetch_array(Actualiza::ValorDivisor($Datos["idmedicina"],$IdModalidad))){
 		$Divisor=$respDivisor[0];
 
-		if($data["Existencia"] < 1){
+		if($data["existencia"] < 1){
 			//Si la cantidad a mostrar es menor que 1 es decir menor a un frasco
-		   $TransformaEntero=number_format($data["Existencia"]*$Divisor,0,'.',',');
+		   $TransformaEntero=number_format($data["existencia"]*$Divisor,0,'.',',');
 			$CantidadTransformada=$TransformaEntero.'/'.$Divisor;
 		}else{
 			//Si la cantidad es mayor a un frasco se realiza este cambio a quebrados

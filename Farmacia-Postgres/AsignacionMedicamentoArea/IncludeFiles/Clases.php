@@ -3,7 +3,7 @@
 //ADMINISTRACION DE FARMACIA	
 class Farmacia{
    function Farmacias($IdEstablecimiento,$IdModalidad){
-	$SQL="select distinct mf.Id as IdFarmacia,Farmacia
+	$SQL="select distinct mf.id as IdFarmacia,Farmacia
               from mnt_farmacia mf
               inner join mnt_farmaciaxestablecimiento mfe
               on mfe.IdFarmacia=mf.Id
@@ -19,7 +19,7 @@ class Farmacia{
 	$SQL="select maf.id as IdArea,Area
               from mnt_areafarmacia maf
               inner join mnt_areafarmaciaxestablecimiento mafe
-              on mafe.IdArea=maf.Id              
+              on mafe.IdArea=maf.Id
               where maf.IdFarmacia=".$IdFarmacia." 
               and mafe.Habilitado='S' 
               and maf.Id <> 7
@@ -30,7 +30,7 @@ class Farmacia{
    }
 
     function ObtenerGrupoTerapeutico(){
-	$SQL="select id as idterapeutico,* 
+	$SQL="select * 
 		from mnt_grupoterapeutico
 		where GrupoTerapeutico <> '--'";
 	$resp=pg_query($SQL);
@@ -40,7 +40,7 @@ class Farmacia{
     function CatalogoxGrupo($IdGrupoTerapeutico,$IdEstablecimiento,$IdModalidad){
 	
 	if($IdGrupoTerapeutico!=0){
-	$SQL="select * from farm_catalogoproductos cp
+	$SQL="select cp.id as idmedicina,* from farm_catalogoproductos cp
 		inner join farm_catalogoproductosxestablecimiento cpe
 		on cpe.IdMedicina = cp.Id
 		where cp.IdTerapeutico=".$IdGrupoTerapeutico." 
@@ -57,7 +57,7 @@ class Farmacia{
 	$SQL="select *
                 from mnt_areamedicina 
 		where IdMedicina=".$IdMedicina."
-		and IdArea= ".$IdArea."
+		and Idarea= ".$IdArea."
                 and IdEstablecimiento=".$IdEstablecimiento."
                 and IdModalidad=$IdModalidad";
 	$resp=pg_fetch_array(pg_query($SQL));
@@ -100,13 +100,12 @@ class Farmacia{
 	$SQL="insert into mnt_areamedicina(IdMedicina,IdArea,IdEstablecimiento,IdModalidad) 
                                     values('$IdMedicina','$IdArea','$IdEstablecimiento','$IdModalidad')";
 	$resp=pg_query($SQL);
-        echo "consulta aca ".$SQL;
 	return($resp);
     }
 
     function EliminarMedicina($IdMedicina,$IdArea,$IdEstablecimiento,$IdModalidad){
 	$SQL="delete from mnt_areamedicina 
-              where IdMedicina=".$IdMedicina." and Id=".$IdArea." 
+              where IdMedicina=".$IdMedicina." and IdArea=".$IdArea." 
               and IdEstablecimiento=".$IdEstablecimiento." and IdModalidad=$IdModalidad";
 	pg_query($SQL);
     }
@@ -140,10 +139,9 @@ class Farmacia{
 	break;
 	case 'E':
 	   //Si el estado es a N (no estupefaciente)
-	   $SQL="update mnt_areamedicina set Dispensada=0 
+	   $SQL="update mnt_areamedicina set Dispensada='' 
                  where IdMedicina=".$IdMedicina." and IdArea=".$IdArea." and Dispensada=".$IdAreaOld." 
                  and IdEstablecimiento=".$IdEstablecimiento." and IdModalidad=$IdModalidad";
-		var_dump($SQL);
 	   $resp=pg_query($SQL);
            
 	break;

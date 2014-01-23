@@ -59,7 +59,7 @@ if (!isset($_SESSION["nivel"])) { ?>
             if ($_SESSION["TipoFarmacia"] != 1) {
                 $complemento = "";
             } else {
-                $complemento = "and mf.IdFarmacia in(1,2,3)";
+                $complemento = "and mf.Id in(1,2,3)";
             }
             $consulta = pg_query("select mf.id as IdFarmacia,Farmacia 
                                      from mnt_farmacia mf

@@ -22,7 +22,7 @@ class TransferenciaProceso{
         
         function ObtenerExistencia2($Lote,$Bandera,$IdAreaOrigen,$IdEstablecimiento,$IdModalidad){
 	/*Se usa para obtener su existencia y para obtener el codigo de lote[despliegue del detalle]*/
-		$querySelect="select IdExistencia,farm_medicinaexistenciaxarea.Existencia,farm_lotes.Lote
+		$querySelect="select farm_medicinaexistenciaxarea.id as IdExistencia,farm_medicinaexistenciaxarea.Existencia,farm_lotes.Lote
 					from farm_medicinaexistenciaxarea
 					inner join farm_lotes
 					on farm_lotes.Id=farm_medicinaexistenciaxarea.IdLote
@@ -135,16 +135,16 @@ while($Bandera){
             
 		$Cantidad1=($Cantidad/$Divisor);
 		$queryInsert="insert into farm_transferencias(Cantidad,IdMedicina,IdLote,IdAreaOrigen,IdAreaDestino,Justificacion,FechaTransferencia,IdPersonal,IdEstado,IdEstablecimiento,IdModalidad) 
-                                                       values('$Cantidad1','$IdMedicina','$Lote','$IdAreaOrigen','$IdAreaDestino','$Justificacion','$FechaTransferencia','$IdPersonal','X',$IdEstablecimiento,$IdModalidad)";
-		pg_query($queryInsert);
-			
-
-			$IdTransferenciasN=pg_insert_id();
+                                                       values('$Cantidad1','$IdMedicina','$Lote','$IdAreaOrigen','$IdAreaDestino','$Justificacion','$FechaTransferencia','$IdPersonal','X',$IdEstablecimiento,$IdModalidad) returning id";
+		$transf_result=pg_query($queryInsert);
+		$transf_row = pg_fetch_row($transf_result);
+                $IdTransferenciasN= $transf_row[0];
+		//$IdTransferenciasN=pg_insert_id();
 
 		//SIL A AREA ES DIFERENTE DE CERO ES DECIR SI ES UNA TRANFERENCIA ENTRE FARMACIAS
 		if($IdAreaDestino!=0){
 		   $ver=TransferenciaProceso::ObtenerExistencia2($Lote,1,$IdAreaDestino,$IdEstablecimiento,$IdModalidad);
-		   $IdExistenciaDestino=$ver["IdExistencia"];
+		   $IdExistenciaDestino=$ver["idexistencia"];
 		   if($IdExistenciaDestino==NULL or $IdExistenciaDestino==""){
 		   //NO EXISTE INFORMACION DE ESTE LOTE NI DEL MEDICAMENTO EN CUESTION	
 			$SQL="insert into farm_medicinaexistenciaxarea (IdMedicina,IdArea,Existencia,IdLote,IdEstablecimiento,IdModalidad) 
@@ -155,12 +155,12 @@ while($Bandera){
 			pg_query($SQL2);
 		   }
                    
-		   $ExistenciaDestino=number_format($ver["Existencia"],0,'.','');
+		   $ExistenciaDestino=number_format($ver["existencia"],0,'.','');
 		   if(($ExistenciaDestino==0 or $ExistenciaDestino!=0) and $ExistenciaDestino!=NULL and $ExistenciaDestino!=""){
 		   //SI EXISTE INFORMACION DEL LOTE PERO EL MEDICAMENTO ESTA COMPLETAMENTE AGOTADO O APUNTO DE...
 			$Cantidad_nueva=$Cantidad1+$ExistenciaDestino;
 			$SQL="update farm_medicinaexistenciaxarea set Existencia='$Cantidad_nueva' 
-                              where IdMedicina='$IdMedicina' and IdArea='$IdAreaDestino' and IdLote='$Lote' and IdExistencia=".$ver["IdExistencia"];
+                              where IdMedicina='$IdMedicina' and IdArea='$IdAreaDestino' and IdLote='$Lote' and Id=".$ver["idexistencia"];
 			pg_query($SQL);
 			$SQL2="insert into farm_bitacoramedicinaexistenciaxarea (IdMedicina,IdArea,Existencia,IdLote,FechaHoraIngreso,IdPersonal,IdTransferencia,IdEstablecimiento,IdModalidad) 
                                                                           values('$IdMedicina','$IdAreaDestino','$Cantidad1','$Lote',now(),'$IdPersonal','$IdTransferenciasN',$IdEstablecimiento,$IdModalidad)";
@@ -170,10 +170,10 @@ while($Bandera){
 		}
 		//*******************************************************************************
 
-		$Existencia_new=($Existencia2["Existencia"]*$Divisor)-($Cantidad1*$Divisor);//Existencia remanente despues de transferencia
+		$Existencia_new=($Existencia2["existencia"]*$Divisor)-($Cantidad1*$Divisor);//Existencia remanente despues de transferencia
                         $Existencia_new=$Existencia_new/$Divisor;
 		$SQL="update farm_medicinaexistenciaxarea set Existencia = '$Existencia_new' 
-                      where IdMedicina='$IdMedicina' and IdLote='$Lote' and IdArea='$IdAreaOrigen' and IdExistencia=".$Existencia2["IdExistencia"];
+                      where IdMedicina='$IdMedicina' and IdLote='$Lote' and IdArea='$IdAreaOrigen' and Id=".$Existencia2["idexistencia"];
 			pg_query($SQL);
 
 	      	$Bandera=false;

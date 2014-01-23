@@ -32,24 +32,6 @@ class Actualizaciones{
                    AND mnt_3.Condicion='H'
 			order by mnt_3.id
 					LIMIT 20 offset $pagina";
-            
-           /*estado anterior de la consulta 
-            $querySelect="select mss.IdSubServicio, msse.Condicion as HabilitadoFarmacia,
-                        msse.CodigoFarmacia, concat_ws(' - ',NombreServicio,NombreSubServicio) as SubServicio
-			from mnt_subservicio mss
-			inner join mnt_subservicioxestablecimiento msse
-			on mss.IdSubServicio=msse.IdSubServicio
-			inner join mnt_servicioxestablecimiento mse
-			on mse.IdServicioxEstablecimiento=msse.IdServicioxEstablecimiento
-                        inner join mnt_servicio ms
-                        on ms.IdServicio = mse.IdServicio
-
-			where msse.IdEstablecimiento=".$IdEstablecimiento."
-                        and msse.IdModalidad=$IdModalidad
-			and msse.Condicion='H'
-			order by ms.IdServicio,NombreSubServicio
-					LIMIT 20 offset $pagina";
-            * */
 		$resp=pg_query($querySelect);
 		return($resp);		
 	}//Datos Generales
@@ -61,7 +43,7 @@ class Actualizaciones{
 	if($NombreSubEspecialidad!=''){
 		$filtro="(ctl.nombre ilike '%$NombreSubEspecialidad%' or mnt_3.nombre_ambiente ilike '%$NombreSubEspecialidad%')";
 	}
-            $querySelect="SELECT mnt_3.id as IdSubServicio,condicion AS HabilitadoFarmacia, codigo_farmacia,
+		$querySelect="SELECT mnt_3.id as IdSubServicio,condicion AS HabilitadoFarmacia, codigo_farmacia,
                    CASE
                    WHEN mnt_3.nombre_ambiente IS NOT NULL
                    THEN  
@@ -88,25 +70,6 @@ class Actualizaciones{
                    AND mnt_3.Condicion='H'
                    AND ".$filtro."
 			order by mnt_3.id";
-            echo $NombreSubEspecialidad;
-        /*estado anterior de la consulta
-            $querySelect="select mss.IdSubServicio, msse.Condicion as HabilitadoFarmacia,
-                        msse.CodigoFarmacia, concat_ws(' - ',NombreServicio,NombreSubServicio) as SubServicio
-			from mnt_subservicio mss
-			inner join mnt_subservicioxestablecimiento msse
-			on mss.IdSubServicio=msse.IdSubServicio
-			inner join mnt_servicioxestablecimiento mse
-			on mse.IdServicioxEstablecimiento=msse.IdServicioxEstablecimiento
-                        inner join mnt_servicio ms
-                        on ms.IdServicio = mse.IdServicio
-			
-			where msse.IdEstablecimiento=".$IdEstablecimiento."
-                        and msse.IdModalidad=$IdModalidad
-			and msse.Condicion='H'
-			and ".$filtro."
-			order by ms.IdServicio,NombreSubServicio";
-         * 
-         */
 		$resp=pg_query($querySelect);
 		return($resp);	}//BusquedaMedico
 	
@@ -126,24 +89,12 @@ class Actualizaciones{
                    WHERE ctl_mod.id =$IdModalidad
                    AND mnt_3.id_establecimiento =$IdEstablecimiento
                    AND mnt_3.Condicion='H'";
-            
-            /*
-            $querySelect="select count(msse.IdSubServicio)
-					from mnt_subservicio mss
-					inner join mnt_subservicioxestablecimiento msse
-					on msse.IdSubServicio=mss.IdSubServicio
-					where msse.Condicion='H'
-                                        and IdEstablecimiento=$IdEstablecimiento
-                                        and IdModalidad=$IdModalidad
-					order by NombreSubServicio";
-             * */
-             
 		$resp=pg_fetch_array(pg_query($querySelect));
 		return($resp[0]);
 	}
 	
 	function CodigoActualFarmacia($IdSubEspecialidad,$IdEstablecimiento,$IdModalidad){
-	$querySelect="SELECT mnt_3.codigo_farmacia
+		$querySelect="SELECT mnt_3.codigo_farmacia
 
                    FROM mnt_aten_area_mod_estab mnt_3
                    INNER JOIN mnt_area_mod_estab mnt_2 on mnt_3.id_area_mod_estab = mnt_2.id
@@ -155,17 +106,8 @@ class Actualizaciones{
                    INNER JOIN ctl_modalidad ctl_mod on mnt_mod_estab.id_modalidad = ctl_mod.id
                    WHERE ctl_mod.id =$IdModalidad
                    AND mnt_3.id_establecimiento =$IdEstablecimiento
-                   AND mnt_3.id=$IdSubEspecialidad";	
-            /*estado anterior de la consulta
-            $querySelect="select msse.CodigoFarmacia
-					from mnt_subservicio
-					inner join mnt_subservicioxestablecimiento msse
-					on msse.IdSubServicio=mnt_subservicio.IdSubServicio
-					where mnt_subservicio.IdSubServicio='$IdSubEspecialidad'
-					and IdEstablecimiento=".$IdEstablecimiento."
-                                        and IdModalidad=$IdModalidad";
-             */
-		$resp=pg_fetch_array(pg_query($querySelect));
+                   AND mnt_3.id=$IdSubEspecialidad";
+		$resp=pg_fetch_array(mysql_query($querySelect));
 		return($resp[0]);
 	}
 	
@@ -173,7 +115,7 @@ class Actualizaciones{
 		$querySelect="select IdSubEspecialidad,NombreSubEspecialidad
 					from mnt_subespecialidad
 					where IdSubEspecialidad=".$IdSubEspecialidad;
-		$resp=pg_fetch_array(pg_query($querySelect));
+		$resp=pg_fetch_array(mysql_query($querySelect));
 		return($resp[1]);		
 	}//SubEspecialidad
 	
@@ -188,15 +130,9 @@ class Actualizaciones{
 	}//MedicoSubEspecialidad
 	
 	function ActualizarCodigoFarmacia($IdSubEspecialidad,$CodigoNuevo,$IdEstablecimiento,$IdModalidad){
-		
-            $queryUpdate="update mnt_aten_Area_mod_estab set Codigo_Farmacia='$CodigoNuevo' 
+		$queryUpdate="update mnt_aten_Area_mod_estab set Codigo_Farmacia='$CodigoNuevo' 
                             where Id='$IdSubEspecialidad' 
                             and Id_Establecimiento=".$IdEstablecimiento;
-            /*
-            $queryUpdate="update mnt_subservicioxestablecimiento set CodigoFarmacia='$CodigoNuevo' 
-                            where IdSubServicio='$IdSubEspecialidad' 
-                            and IdEstablecimiento=".$IdEstablecimiento." and IdModalidad=$IdModalidad";
-             */
 		pg_query($queryUpdate);
 	}//Actualiza Codigo
 	
@@ -214,18 +150,6 @@ class Actualizaciones{
                    AND mnt_3.id_establecimiento =$IdEstablecimiento
                    AND mnt_3.codigo_farmacia=$CodigoNuevo
                    AND mnt_3.id<>$IdSubEspecialidad";
-                    
-
-                /*estado consulta anterior
-                   $querySelect=" select msse.IdSubServicio 
-                              from mnt_subservicio mss
-                              inner join mnt_subservicioxestablecimiento msse
-                              on mss.IdSubServicio = msse.IdSubServicio
-                              where msse.CodigoFarmacia='$CodigoNuevo' 
-                              and msse.IdSubServicio <> '$IdSubEspecialidad' 
-                              and IdEstablecimiento=".$IdEstablecimiento."
-                              and IdModalidad=$IdModalidad";
-                 */
 		$resp=pg_fetch_array(pg_query($querySelect));
 		return($resp[0]);
 	}//varificacion de Codigo
@@ -233,7 +157,7 @@ class Actualizaciones{
 
 	
 	function VerificaEstadoMedico($IdSubEspecialidad){
-		$querySelect="select condicion as HabilitadoFarmacia
+		$querySelect="select condicion as habilitadofarmacia
 					from mnt_aten_area_mod_estab
 					where Id='$IdSubEspecialidad'";
 		$resp=pg_fetch_array(pg_query($querySelect));

@@ -26,14 +26,16 @@ $IdEstablecimiento=$_SESSION["IdEstablecimiento"];
 $IdModalidad=$_SESSION["IdModalidad"];
 function generaSelect2($IdEstablecimiento,$IdModalidad){ //creacioon de combo para las Regiones
 	conexion::conectar();
-	if($_SESSION["TipoFarmacia"]==1){$comp=" and HabilitadoFarmacia='S'";}else{$comp="";}
-	$consulta=pg_query("select mfxe.IdFarmacia,Farmacia
+	if($_SESSION["TipoFarmacia"]==1){$comp=" and mf.HabilitadoFarmacia='S'";}else{$comp="";}
+        $sql="select mfxe.IdFarmacia,Farmacia
                                 from mnt_farmacia mf
                                 inner join mnt_farmaciaxestablecimiento mfxe
                                 on mfxe.IdFarmacia = mf.Id
                                 where mfxe.IdEstablecimiento=$IdEstablecimiento
                                 and mfxe.IdModalidad=$IdModalidad
-				".$comp);
+				".$comp;
+	$consulta=pg_query($sql);
+       
 	conexion::desconectar();
 	// Voy imprimiendo el primer select compuesto por los paises
 	echo "<select name='IdFarmacia' id='IdFarmacia'>";

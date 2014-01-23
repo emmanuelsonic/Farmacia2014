@@ -55,6 +55,7 @@ function EliminarExistenciaxArea($IdMedicina,$IdExistenciaArea,$IdLote,$IdArea,$
 	function ValorDivisor($IdMedicina,$IdModalidad){
 	   $SQL="select DivisorMedicina from farm_divisores where IdMedicina=".$IdMedicina." and IdModalidad=$IdModalidad";
 	   $resp=pg_query($SQL);
+           
 	   return($resp);
     	}
 

@@ -61,13 +61,13 @@ $tabla='<table width="1018" border="1">
 
 	do{
 	/*OBTENCION DE DETALLE DE TRANSFERENCIA POR LOTE*/
-	$resp2=$proceso->ObtenerDetalleLote($row["IdEntrega"]);
+	$resp2=$proceso->ObtenerDetalleLote($row["identrega"]);
 	
-	$CantidadReal=$resp2["Existencia"];
-	$IdLote=$resp2["IdLote"];
-	$Lote=$resp2["Lote"];
+	$CantidadReal=$resp2["existencia"];
+	$IdLote=$resp2["idlote"];
+	$Lote=$resp2["lote"];
 	$DetalleLotes='';
-		$IdMedicina=$row["IdMedicina"];
+		$IdMedicina=$row["idmedicina"];
 	$UnidadesContenidas=$_GET["UnidadesContenidas"];
 
 	if($respDivisor=pg_fetch_array($proceso->ValorDivisor($IdMedicina,$_SESSION["IdEstablecimiento"],$IdModalidad))){
@@ -108,14 +108,14 @@ $tabla='<table width="1018" border="1">
 		
 			$DetalleLotes.="Cant.: ".$CantidadIntro."<br>Lote= ".$Lote."<br><br>";
 	/****************************************************/
-	   if($row["Justificacion"]!=NULL and $row["Justificacion"]!=''){
-		$justificacion=$row["Justificacion"];
+	   if($row["justificacion"]!=NULL and $row["justificacion"]!=''){
+		$justificacion=$row["justificacion"];
 	   }else{
 		$justificacion="Por vencimiento de Medicamento";
 	   }
 	/****************************************************/
 	
-		$tabla=$tabla.'<tr class="FONDO"><td align="center">'.$row["IdEntrega"].'</td><td align="center">'.$CantidadIntro.'</td><td align="center">'.$row["Nombre"].', '.$row["Concentracion"].' - '.$row["Presentacion"].'</td><td align="center">'.$row["Descripcion"].'</td><td align="center">'.$DetalleLotes.'</td><td align="center">'.$row["Area"].'</td><td>'.htmlentities($justificacion).'</td><td align="center"><input type="button" id="borrar" name="borrar" value="Eliminar" onclick="javascript:BorrarDescarga('.$row["IdEntrega"].')"></td></tr>';
+		$tabla=$tabla.'<tr class="FONDO"><td align="center">'.$row["identrega"].'</td><td align="center">'.$CantidadIntro.'</td><td align="center">'.$row["nombre"].', '.$row["concentracion"].' - '.$row["presentacion"].'</td><td align="center">'.$row["descripcion"].'</td><td align="center">'.$DetalleLotes.'</td><td align="center">'.$row["area"].'</td><td>'.htmlentities($justificacion).'</td><td align="center"><input type="button" id="borrar" name="borrar" value="Eliminar" onclick="javascript:BorrarDescarga('.$row["identrega"].')"></td></tr>';
 	}while($row=pg_fetch_array($resp));//while resp
 $tabla=$tabla.'</table>';
 }else{
@@ -136,11 +136,6 @@ case 4:
 $IdMedicina=$_GET["IdMedicina"];
 $Motivo=$_GET["Motivo"];//1:Vencimiento  2: Averiado
 $IdArea=$_GET["IdAreaOrigen"];
-echo "medicina".$IdMedicina;
-echo "area".$IdArea;
-echo "farmacia".$TipoFarmacia;
-echo "establecimiento".$_SESSION["IdEstablecimiento"];
-echo "modalidad".$IdModalidad;
 $resp=$proceso->ObtenerLotesMedicamento($IdMedicina,$Motivo,$IdArea,$TipoFarmacia,$_SESSION["IdEstablecimiento"],$IdModalidad);
 $combo="<select id='IdLote' name='IdLote'>";
 $combo.="<option value='0'>[Seleccione Lote...]</option>";
@@ -203,10 +198,10 @@ case 6:
 /* CAMBIO DE ESTADO DE LAS TRANSFERENCIAS */
 $resp=$proceso->ObtenerCantidadMedicina($IdPersonal);
 while($row=pg_fetch_array($resp)){
-$IdMedicina=$row["IdMedicina"];$IdArea=$row["IdArea"];
+$IdMedicina=$row["idmedicina"];$IdArea=$row["idarea"];
 /*PARES DE INFORMACION*/
-$Cantidad=$row["Cantidad1"];$Lote=$row["IdLote"];
-$Cantidad2=$row["Cantidad2"];$Lote2=$row["IdLote2"];
+$Cantidad=$row["cantidad1"];$Lote=$row["idlote"];
+$Cantidad2=$row["cantidad2"];$Lote2=$row["idlote2"];
 /**********************/
 		if($Lote!=0){
 			queries::MedicinaExistencias($IdMedicina,$Cantidad,"SI",$IdArea,$Lote);

@@ -40,7 +40,7 @@ switch($_GET["Bandera"]){
 		$out.="<select id='IdGrupoTerapeutico' name='IdGrupoTerapeutico' onchange='CargarCatFarmacia(this.value);' disabled='true'>
 			<option value='0'> << Grupo Terapeutico >> </option>";
 			do{
-			$out.="<option value='".$row["idterapeutico"]."'>".$row["idterapeutico"].' = '.$row["grupoterapeutico"]."</option>";
+			$out.="<option value='".$row["id"]."'>".$row["id"].' = '.$row["grupoterapeutico"]."</option>";
 			}while($row=pg_fetch_array($resp));
 		$out.="</select>";
 	     }
@@ -79,13 +79,13 @@ switch($_GET["Bandera"]){
 		    <tr class='FONDO2'><th style='border-left:solid; border-right:solid; border-bottom:solid;'>CODIGO</th><th style=' border-right:solid;border-bottom:solid;'>MEDICAMENTO</th><th style=' border-right:solid;border-bottom:solid;'>CONCENTRACION</th><th style=' border-right:solid;border-bottom:solid;'>PRESENTACION</th><th style=' border-right:solid;border-bottom:solid;'>HABILITAR<br>[<input type='checkbox' id='all' name='all' onclick='SeleccionaTodo();'> TODO]</th><th style=' border-right:solid;border-bottom:solid;'>AREA DISPENSADA</th></tr>";
 	   	do{
                     $IdMedicina=$row["idmedicina"];
-                    echo "MEDICINA".$IdMedicina;
+                    
 		    $confirmacion=$farmacia->MedicamentoHabilitado($row["idmedicina"],$_GET["IdArea"],$_SESSION["IdEstablecimiento"],$_SESSION["IdModalidad"]);
 		    
 		    if($confirmacion!=NULL and $confirmacion!=''){
-		       $checkbox="<input type='checkbox' name='checkeo' id='".$row["id"]."' value='".$row["id"]."' checked='true' alt='Deshabilitar' onclick='DeshabilitarMedicamento(this.value);'>";
+		       $checkbox="<input type='checkbox' name='checkeo' id='".$row["idmedicina"]."' value='".$row["idmedicina"]."' checked='true' alt='Deshabilitar' onclick='DeshabilitarMedicamento(this.value);'>";
 		    }else{
-		       $checkbox="<input type='checkbox' name='checkeo' id='".$row["id"]."' value='".$row["id"]."' alt='Habilitar' onclick='HabilitarMedicamento(this.value);'>";
+		       $checkbox="<input type='checkbox' name='checkeo' id='".$row["idmedicina"]."' value='".$row["idmedicina"]."' alt='Habilitar' onclick='HabilitarMedicamento(this.value);'>";
 		    }
 
 			//verificacion si es Dispensada en otra area
@@ -154,6 +154,6 @@ switch($_GET["Bandera"]){
 }
 conexion::desconectar();
 
-//Osyan 
+
 }
 ?>

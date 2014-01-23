@@ -42,10 +42,18 @@ if($row = pg_fetch_array($result3, null, PGSQL_ASSOC)){
 
 
 //$resp=mysql_query("select Farmacia from mnt_farmacia where IdFarmacia='$farmacia'");
-$query="select Nombre,IdTipoFarmacia,TipoExpediente from mnt_establecimiento 
+$query="select Nombre,idTipoFarmacia,Tipo_Expediente from ctl_establecimiento 
+        inner join mnt_modalidad_establecimiento
+        on mnt_modalidad_establecimiento.Id_Establecimiento=ctl_establecimiento.Id
+        where ctl_establecimiento.Id=".$IdEstablecimiento;
+     
+/*query anterior  
+        "select Nombre,IdTipoFarmacia,TipoExpediente from mnt_establecimiento 
         inner join mnt_modalidadxestablecimiento 
         on mnt_modalidadxestablecimiento.IdEstablecimiento=mnt_establecimiento.IdEstablecimiento 
         where mnt_establecimiento.IdEstablecimiento=".$IdEstablecimiento;
+ * 
+ */
 $query2="select Area from mnt_areafarmacia
         inner join mnt_areafarmaciaxestablecimiento 
         on mnt_areafarmaciaxestablecimiento.IdArea=mnt_areafarmacia.Id
@@ -58,9 +66,9 @@ $db->consulta("update fos_user_user set conectado='S' where Id=".$id);
 $db->consulta("update fos_user_user set last_login=now() where Id=".$id);		
 		
 
-	$NombreEstablecimiento=$NombreEstablecimiento1["Nombre"];
-	$IdTipoFarmacia=$NombreEstablecimiento1["IdTipoFarmacia"];
-	$TipoExpediente=$NombreEstablecimiento1["TipoExpediente"];
+	$NombreEstablecimiento=$NombreEstablecimiento1["nombre"];
+	$IdTipoFarmacia=$NombreEstablecimiento1["idtipofarmacia"];
+	$TipoExpediente=$NombreEstablecimiento1["tipo_expediente"];
 	
 
 		
