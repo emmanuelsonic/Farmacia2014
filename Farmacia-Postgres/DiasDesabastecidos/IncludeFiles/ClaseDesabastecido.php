@@ -13,26 +13,22 @@ class Desabastecimiento{
    }
 
    function InsatisfechasPromedio($IdMedicina,$FechaInicio,$FechaFin,$IdEstablecimiento,$IdModalidad){
-	$SQL="select count(IdMedicinaRecetada) as TotalRecetas,
+	$SQL="select count(fmr.Id) as TotalRecetas, 
+                ceil(extract(days from('$FechaInicio'::date-('$FechaInicio'::date-'1 month'::interval)))::int) as DiasMeses, 
+                count(fmr.Id)/
+                ceil(extract(days from('$FechaInicio'-('$FechaInicio'::date -'1 month'::interval)))::int) as PromedioDiaRecetas, 
+                count(fmr.Id)/
+                ceil(extract(days from('$FechaInicio'-('$FechaInicio'::date-'1 month'::interval)))::int* 
+                extract(days from('$FechaFin'-('$FechaInicio'::date+'0 month'::interval)))) as PromInsatisfechas 
 
-ceil(datediff('$FechaInicio',adddate('$FechaInicio',interval -1 month))) as DiasMeses,
+                from farm_recetas fr 
+                inner join farm_medicinarecetada fmr on fr.Id=fmr.IdReceta 
+                inner join sec_historial_clinico shc on shc.Id=fr.IdHistorialClinico 
+                where (fr.IdEstado='E' or fr.IdEstado='ER') and (fmr.IdEstado='S' or fmr.IdEstado='') and 
+                IdMedicina = 2 and shc.IdEstablecimiento=$IdEstablecimiento and 
+                fr.IdModalidad=$IdModalidad
+                and fr.Fecha between ('$FechaInicio'::date -'1 month'::interval) and '$FechaFin'";
 
-count(IdMedicinaRecetada)/ceil(datediff('$FechaInicio',adddate('$FechaInicio',interval -1 month))) as PromedioDiaRecetas, 
-
-ceil((count(IdMedicinaRecetada)/ceil(datediff('$FechaInicio',adddate('$FechaInicio',interval -1 month)))) * datediff('$FechaFin','$FechaInicio')) as PromInsatisfechas 
-
-	from farm_recetas fr 
-	inner join farm_medicinarecetada fmr 
-	on fr.IdReceta=fmr.IdReceta 
-        inner join sec_historial_clinico shc
-        on shc.IdHistorialClinico=fr.IdHistorialClinico
-	where (fr.IdEstado='E' or fr.IdEstado='ER') 
-	and (fmr.IdEstado='S' or fmr.IdEstado='') 
-	and IdMedicina = $IdMedicina 
-        and shc.IdEstablecimiento=$IdEstablecimiento
-        and fr.IdModalidad=$IdModalidad
-	and fr.Fecha between adddate('$FechaInicio',interval -1 month) and '$FechaFin'
-	";
 	$resp=pg_query($SQL);
 	return($resp);
    }

@@ -91,16 +91,16 @@ class TransferenciaProceso {
         /* OBTENCION DE INFORMES INTRODUCIDOS POR EL USUARIO SIN SER FINALIZADOS */
         $querySelect = "select farm_ajustes.Existencia as Cantidad,farm_catalogoproductos.Nombre,farm_catalogoproductos.Concentracion, Presentacion,Descripcion, 
 					mnt_areafarmacia.Area,farm_ajustes.Justificacion,ActaNumero,farm_ajustes.IdExistencia,
-					farm_ajustes.IdAjuste,farm_lotes.Lote,farm_catalogoproductos.IdMedicina
+					farm_ajustes.id as IdAjuste,farm_lotes.Lote,farm_catalogoproductos.id as IdMedicina
 					from farm_ajustes
 					inner join farm_catalogoproductos
-					on farm_catalogoproductos.IdMedicina=farm_ajustes.IdMedicina
+					on farm_catalogoproductos.Id=farm_ajustes.IdMedicina
 					inner join mnt_areafarmacia
-					on mnt_areafarmacia.IdArea=farm_ajustes.IdArea
+					on mnt_areafarmacia.Id=farm_ajustes.IdArea
 					inner join farm_lotes
-					on farm_lotes.IdLote=farm_ajustes.IdLote
+					on farm_lotes.Id=farm_ajustes.IdLote
 					inner join farm_unidadmedidas fum
-					on fum.IdUnidadMedida=farm_catalogoproductos.IdUnidadMedida
+					on fum.Id=farm_catalogoproductos.IdUnidadMedida
                                         where farm_ajustes.IdPersonal='$IdPersonal'
 					and date(farm_ajustes.FechaAjuste)= '$Fecha'
                                         and farm_ajustes.IdEstablecimiento=$IdEstablecimiento
@@ -115,7 +115,7 @@ class TransferenciaProceso {
     function NombreArea($IdArea) {
         $querySelect = "select mnt_areafarmacia.Area
 					from mnt_areafarmacia
-					where mnt_areafarmacia.IdArea='$IdArea'";
+					where mnt_areafarmacia.Id='$IdArea'";
         if ($resp = pg_fetch_array(pg_query($querySelect))) {
             return($resp[0]);
         } else {
@@ -133,17 +133,17 @@ class TransferenciaProceso {
             $IdLote=$row["IdLote"];
             
         if($TipoFarmacia==1){
-            $SQL="delete from farm_entregamedicamento where IdEntrega=".$IdExistencia;
+            $SQL="delete from farm_entregamedicamento where Id=".$IdExistencia;
         }else{
-            $SQL="delete from farm_medicinaexistenciaxarea where IdExistencia=".$IdExistencia;
+            $SQL="delete from farm_medicinaexistenciaxarea where Id=".$IdExistencia;
         }
        
         pg_query($SQL);
         
-        $SQL2="delete from farm_lotes where IdLote=".$IdLote;
+        $SQL2="delete from farm_lotes where Id=".$IdLote;
         pg_query($SQL2);
         
-        $SQL3="delete from farm_ajustes where IdAjuste=".$IdAjuste;
+        $SQL3="delete from farm_ajustes where Id=".$IdAjuste;
         pg_query($SQL3);
         
     }//eliminar ajustes
@@ -174,21 +174,21 @@ class TransferenciaProceso {
 //ObtenerCantidadMedicina
 
     function ObtenerLotesMedicamento($IdMedicina, $Cantidad, $IdArea, $IdEstablecimiento,$IdModalidad) {
-        $querySelect = "select sum(Existencia),farm_lotes.IdLote,
-                                     if (left(farm_lotes.FechaVencimiento,7) < left(curdate(),7), 
+        $querySelect = "select sum(Existencia),farm_lotes.id as IdLote,
+                                     if (left(to_char(farm_lotes.FechaVencimiento,'YYYY-MM-DD'),7) < left(to_char(current_date,'YYYY-MM-DD'),7), 
                                         concat_ws(' ',farm_lotes.Lote,' [Lote Vencido]'), 
                                         farm_lotes.Lote) as Lote, 
                                      farm_lotes.FechaVencimiento
 					from farm_lotes
 					inner join farm_medicinaexistenciaxarea
-					on farm_medicinaexistenciaxarea.IdLote=farm_lotes.IdLote
+					on farm_medicinaexistenciaxarea.IdLote=farm_lotes.Id
 					where farm_medicinaexistenciaxarea.IdMedicina='$IdMedicina'
 					and farm_medicinaexistenciaxarea.Existencia <> 0
                                         and farm_medicinaexistenciaxarea.IdEstablecimiento=$IdEstablecimiento
                                         and farm_medicinaexistenciaxarea.IdModalidad=$IdModalidad
 					and IdArea=" . $IdArea . "
 					
-					group by farm_lotes.IdLote
+					group by farm_lotes.Id
 					order by farm_lotes.FechaVencimiento";
         $resp = pg_query($querySelect);
         return($resp);
@@ -197,11 +197,11 @@ class TransferenciaProceso {
 //ObtenerLotesMedicamento
 
     function ObtenerDetalleLote($IdAjuste) {
-        $querySelect = "select Existencia as Cantidad, Lote, fl.IdLote
+        $querySelect = "select Existencia as Cantidad, Lote, fl.id as IdLote
 				from farm_ajustes ft
 				inner join farm_lotes fl
-				on fl.IdLote = ft.IdLote
-					where IdAjuste='$IdAjuste'";
+				on fl.Id= ft.IdLote
+					where farm_ajustes.Id='$IdAjuste'";
         $resp = pg_fetch_array(pg_query($querySelect));
         return($resp);
     }

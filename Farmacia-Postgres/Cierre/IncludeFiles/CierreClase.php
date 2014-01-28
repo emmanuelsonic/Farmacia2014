@@ -2,10 +2,10 @@
 include('../../Clases/class.php');
 class Proceso{
 	function Verificar($Ano,$IdEstablecimiento,$IdModalidad){
-		$query="select Nombre,DATE_FORMAT(date(FechaHoraReg),'%d-%m-%Y') as Fecha
-				from farm_usuarios
+		$query="select firstname,to_char(FechaHoraReg,'dd-mm-YYYY') as Fecha
+				from fos_user_user fuu
 				inner join farm_cierre
-				on farm_cierre.IdUsuarioReg=farm_usuarios.IdPersonal
+				on farm_cierre.IdUsuarioReg=fuu.Id
 				
 				where AnoCierre='$Ano'
                                 and farm_cierre.IdEstablecimiento=".$IdEstablecimiento." 
@@ -23,10 +23,10 @@ class Proceso{
 
 
 	function VerificarPeriodo($Periodo,$IdEstablecimiento,$IdModalidad){
-		$query="select Nombre,DATE_FORMAT(date(FechaHoraReg),'%d-%m-%Y') as Fecha
-				from farm_usuarios
+		$query="select firstname,to_char(FechaHoraReg,'dd-%mm-%YYYY') as Fecha
+				from fos_user_user fuu
 				inner join farm_cierre
-				on farm_cierre.IdUsuarioReg=farm_usuarios.IdPersonal
+				on farm_cierre.IdUsuarioReg=fuu.Id
 				
 				where MesCierre='$Periodo'
                                 and farm_cierre.IdEstablecimiento=".$IdEstablecimiento."

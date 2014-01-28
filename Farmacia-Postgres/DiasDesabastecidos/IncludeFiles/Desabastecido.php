@@ -27,9 +27,9 @@ switch($_GET["Bandera"]){
 	   $proc= new Desabastecimiento;
 	   $promedio=$proc->InsatisfechasPromedio($IdMedicina,$FechaInicio,$FechaFin,$_SESSION["IdEstablecimiento"],$IdModalidad);
 	   if($row=pg_fetch_array($promedio)){
-	      echo "Recetas Insatisfechas: ".$row["PromInsatisfechas"]." <br> Promedio de Recetas Diarias: ".$row["PromedioDiaRecetas"];
+	      echo "Recetas Insatisfechas: ".$row["prominsatisfechas"]." <br> Promedio de Recetas Diarias: ".$row["promediodiarecetas"];
 
-	      $proc->IngresarDatosInsatisfecha($IdMedicina,$FechaInicio,$FechaFin,$row["PromInsatisfechas"],$row["PromedioDiaRecetas"],$_SESSION["IdEstablecimiento"],$IdModalidad);
+	      $proc->IngresarDatosInsatisfecha($IdMedicina,$FechaInicio,$FechaFin,$row["prominsatisfechas"],$row["promediodiarecetas"],$_SESSION["IdEstablecimiento"],$IdModalidad);
 	   }else{
 	      echo "Error ...";
 	   }

@@ -18,7 +18,7 @@ switch($Bandera){
 		if($row=pg_fetch_array($resp)){
 		    do{
 		    
-		    $tabla.="<tr><td>".$row["MesCierre"]."</td><td align='right'><input type='checkbox' id='".$row["IdCierre"]."' name='Cierres' value='".$row["IdCierre"]."'></td></tr>";
+		    $tabla.="<tr><td>".$row["mescierre"]."</td><td align='right'><input type='checkbox' id='".$row["id"]."' name='Cierres' value='".$row["id"]."'></td></tr>";
 		    }while($row=pg_fetch_array($resp));
 			
 		    

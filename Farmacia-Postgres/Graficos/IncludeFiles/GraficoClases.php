@@ -10,7 +10,7 @@ from farm_medicinarecetada
 inner join farm_medicinaexistenciaxarea
 on farm_medicinaexistenciaxarea.IdMedicina=farm_medicinarecetada.IdMedicina
 inner join farm_catalogoproductos
-on farm_catalogoproductos.IdMedicina=farm_medicinarecetada.IdMedicina
+on farm_catalogoproductos.Id=farm_medicinarecetada.IdMedicina
 group by farm_medicinarecetada.IdMedicina 
 order by farm_medicinarecetada.IdMedicina";
 
@@ -30,17 +30,20 @@ order by farm_medicinarecetada.IdMedicina";
 
 
         $querySelect = "select farm_catalogoproductos.Nombre,farm_medicinarecetada.IdMedicina, 
-                        farm_medicinarecetada.FechaEntrega,farm_medicinarecetada.Cantidad,monthname(farm_medicinarecetada.FechaEntrega)as MesNombre,
-                        year(farm_medicinarecetada.FechaEntrega) as ano,farm_catalogoproductos.FormaFarmaceutica,
-                        sum(farm_medicinarecetada.Cantidad)as Suma,farm_unidadmedidas.UnidadesContenidas as Divisor,farm_unidadmedidas.Descripcion, farm_catalogoproductos.Concentracion
+                        farm_medicinarecetada.FechaEntrega,farm_medicinarecetada.Cantidad,
+                        to_char(farm_medicinarecetada.FechaEntrega,'mm')as MesNombre,
+                        to_char(farm_medicinarecetada.FechaEntrega,'YYYY') as ano,farm_catalogoproductos.FormaFarmaceutica,
+                        sum(farm_medicinarecetada.Cantidad)as Suma,
+                        farm_unidadmedidas.UnidadesContenidas as Divisor,
+                        farm_unidadmedidas.Descripcion, farm_catalogoproductos.Concentracion
                         
                         from farm_medicinarecetada
                         inner join farm_catalogoproductos
-                        on farm_catalogoproductos.IdMedicina=farm_medicinarecetada.IdMedicina
+                        on farm_catalogoproductos.Id=farm_medicinarecetada.IdMedicina
                         inner join farm_recetas
-                        on farm_recetas.IdReceta=farm_medicinarecetada.IdReceta
+                        on farm_recetas.Id=farm_medicinarecetada.IdReceta
                         inner join farm_unidadmedidas
-                        on farm_unidadmedidas.IdUnidadMedida=farm_catalogoproductos.IdUnidadMedida
+                        on farm_unidadmedidas.Id=farm_catalogoproductos.IdUnidadMedida
                         where  farm_medicinarecetada.FechaEntrega between '$fechaInicio' and '$fechaFin'
                         and IdTerapeutico=" . $grupo . "
                         " . $comp . "
@@ -50,8 +53,12 @@ order by farm_medicinarecetada.IdMedicina";
                         and farm_medicinarecetada.IdModalidad=$IdModalidad
                         and farm_recetas.IdEstablecimiento=$IdEstablecimiento
                         and farm_recetas.IdModalidad=$IdModalidad
-                        group by month(farm_medicinarecetada.FechaEntrega), farm_medicinarecetada.IdMedicina
-                        order by farm_medicinarecetada.IdMedicina,month(farm_medicinarecetada.FechaEntrega)
+                        group by farm_catalogoproductos.Nombre,farm_medicinarecetada.FechaEntrega, 
+                        farm_medicinarecetada.Cantidad,farm_medicinarecetada.IdMedicina,
+                        farm_catalogoproductos.FormaFarmaceutica,farm_unidadmedidas.UnidadesContenidas,
+                        farm_unidadmedidas.Descripcion, farm_catalogoproductos.Concentracion
+                        --group by farm_medicinarecetada.FechaEntrega, farm_medicinarecetada.IdMedicina
+                        order by farm_medicinarecetada.IdMedicina,farm_medicinarecetada.FechaEntrega
                         ";
 
         $resp = pg_query($querySelect);
@@ -72,11 +79,11 @@ order by farm_medicinarecetada.IdMedicina";
         $querySelect = "select distinct farm_medicinarecetada.IdMedicina
                         from farm_medicinarecetada
                         inner join farm_catalogoproductos
-                        on farm_catalogoproductos.IdMedicina=farm_medicinarecetada.IdMedicina
+                        on farm_catalogoproductos.Id=farm_medicinarecetada.IdMedicina
                         inner join farm_recetas
-                        on farm_recetas.IdReceta=farm_medicinarecetada.IdReceta
+                        on farm_recetas.Id=farm_medicinarecetada.IdReceta
                         inner join farm_unidadmedidas
-                        on farm_unidadmedidas.IdUnidadMedida=farm_catalogoproductos.IdUnidadMedida
+                        on farm_unidadmedidas.Id=farm_catalogoproductos.IdUnidadMedida
                         where  farm_medicinarecetada.FechaEntrega between '$fechaInicio' and '$fechaFin'
                         and IdTerapeutico=" . $grupo . "
                         " . $comp . "
@@ -86,7 +93,7 @@ order by farm_medicinarecetada.IdMedicina";
                         and farm_medicinarecetada.IdModalidad=$IdModalidad
                         and farm_recetas.IdEstablecimiento=$IdEstablecimiento
                         and farm_recetas.IdModalidad=$IdModalidad
-                        group by month(farm_medicinarecetada.FechaEntrega), farm_medicinarecetada.IdMedicina
+                        group by farm_medicinarecetada.FechaEntrega, farm_medicinarecetada.IdMedicina
                         order by farm_medicinarecetada.IdMedicina
                         ";
 
@@ -108,8 +115,8 @@ order by farm_medicinarecetada.IdMedicina";
 
 
         $querySelect = "select farm_catalogoproductos.Nombre,farm_medicinarecetada.IdMedicina, 
-                        farm_medicinarecetada.FechaEntrega,farm_medicinarecetada.Cantidad,monthname(farm_medicinarecetada.FechaEntrega)as MesNombre,
-                        year(farm_medicinarecetada.FechaEntrega) as ano,farm_catalogoproductos.FormaFarmaceutica,
+                        farm_medicinarecetada.FechaEntrega,farm_medicinarecetada.Cantidad,to_char(farm_medicinarecetada.FechaEntrega,'mm')as MesNombre,
+                        to_char(farm_medicinarecetada.FechaEntrega,'YYYY') as ano,farm_catalogoproductos.FormaFarmaceutica,
                         sum(farm_medicinarecetada.Cantidad)as Suma,farm_unidadmedidas.UnidadesContenidas as Divisor,farm_unidadmedidas.Descripcion, 
                         farm_catalogoproductos.Concentracion, count(farm_medicinarecetada.IdMedicina) as TotalRecetas
                         

@@ -71,19 +71,19 @@ if ($Gpastel == 1 AND $TipoInfo == 1) {
 
         do {
             $rowT = pg_fetch_array($respT);
-            $IdMedicinaTemp = $rowT["IdMedicina"];
-            $IdMedicinaAct = $row["IdMedicina"];
-            $IdMedicinaPu = $rowPu["IdMedicina"];
+            $IdMedicinaTemp = $rowT["idmedicina"];
+            $IdMedicinaAct = $row["idmedicina"];
+            $IdMedicinaPu = $rowPu["idmedicina"];
 
 
-            $Nombre = $row["Nombre"];
-            $Presentacion = $row["FormaFarmaceutica"];
-            $Concentracion = $row["Concentracion"];
-            $M11 = $row["Suma"];
-            $Divisor = $row["Divisor"];
-            $UnidadMedida = $row["Descripcion"];
+            $Nombre = $row["nombre"];
+            $Presentacion = $row["formafarmaceutica"];
+            $Concentracion = $row["concentracion"];
+            $M11 = $row["suma"];
+            $Divisor = $row["divisor"];
+            $UnidadMedida = $row["descripcion"];
 //$T=$row["Existencia"];
-            $mes = $row["MesNombre"];
+            $mes = $row["mesnombre"];
             $ano = $row["ano"];
             $mes = meses::NombreMes($mes) . "-" . $ano;
 //$T=round($T,0);
@@ -124,19 +124,19 @@ if ($Gpastel == 1 AND $TipoInfo == 2) {
 
         do {
             $rowT = pg_fetch_array($respT);
-            $IdMedicinaTemp = $rowT["IdMedicina"];
-            $IdMedicinaAct = $row["IdMedicina"];
-            $IdMedicinaPu = $rowPu["IdMedicina"];
+            $IdMedicinaTemp = $rowT["idmedicina"];
+            $IdMedicinaAct = $row["idmedicina"];
+            $IdMedicinaPu = $rowPu["idmedicina"];
 
 
-            $Nombre = $row["Nombre"];
-            $Presentacion = $row["FormaFarmaceutica"];
-            $Concentracion = $row["Concentracion"];
-            $M11 = $row["TotalRecetas"];
-            $Divisor = $row["Divisor"];
-            $UnidadMedida = $row["Descripcion"];
+            $Nombre = $row["nombre"];
+            $Presentacion = $row["formafarmaceutica"];
+            $Concentracion = $row["concentracion"];
+            $M11 = $row["totalrecetas"];
+            $Divisor = $row["divisor"];
+            $UnidadMedida = $row["descripcion"];
 //$T=$row["Existencia"];
-            $mes = $row["MesNombre"];
+            $mes = $row["mesnombre"];
             $ano = $row["ano"];
             $mes = meses::NombreMes($mes) . "-" . $ano;
 //$T=round($T,0);
@@ -182,19 +182,19 @@ if ($Gbarras == 1 and $TipoInfo == 1) {
 
         do {
             $rowT = pg_fetch_array($respT);
-            $IdMedicinaTemp = $rowT["IdMedicina"];
-            $IdMedicinaAct = $row["IdMedicina"];
-            $IdMedicinaPu = $rowPu["IdMedicina"];
+            $IdMedicinaTemp = $rowT["idmedicina"];
+            $IdMedicinaAct = $row["idmedicina"];
+            $IdMedicinaPu = $rowPu["idmedicina"];
 
-            $Nombre = $row["Nombre"];
-            $Presentacion = $row["FormaFarmaceutica"];
-            $Concentracion = $row["Concentracion"];
-            $M2 = $row["Suma"];
-            $Divisor = $row["Divisor"];
-            $UnidadMedida = $row["Descripcion"];
+            $Nombre = $row["nombre"];
+            $Presentacion = $row["formafarmaceutica"];
+            $Concentracion = $row["concentracion"];
+            $M2 = $row["suma"];
+            $Divisor = $row["divisor"];
+            $UnidadMedida = $row["descripcion"];
 
 //$T=$row2["Existencia"];
-            $mes = $row["MesNombre"];
+            $mes = $row["mesnombre"];
             $ano = $row["ano"];
             $mes = meses::NombreMes($mes) . "-" . $ano;
             $M2 = $M2;
@@ -238,19 +238,19 @@ if ($Gbarras == 1 and $TipoInfo == 2) {
 
         do {
             $rowT = pg_fetch_array($respT);
-            $IdMedicinaTemp = $rowT["IdMedicina"];
-            $IdMedicinaAct = $row["IdMedicina"];
-            $IdMedicinaPu = $rowPu["IdMedicina"];
+            $IdMedicinaTemp = $rowT["idmedicina"];
+            $IdMedicinaAct = $row["idmedicina"];
+            $IdMedicinaPu = $rowPu["idmedicina"];
 
-            $Nombre = $row["Nombre"];
-            $Presentacion = $row["FormaFarmaceutica"];
-            $Concentracion = $row["Concentracion"];
-            $M2 = $row["TotalRecetas"];
-            $Divisor = $row["Divisor"];
-            $UnidadMedida = $row["Descripcion"];
+            $Nombre = $row["nombre"];
+            $Presentacion = $row["formafarmaceutica"];
+            $Concentracion = $row["concentracion"];
+            $M2 = $row["totalrecetas"];
+            $Divisor = $row["divisor"];
+            $UnidadMedida = $row["descripcion"];
 
 //$T=$row2["Existencia"];
-            $mes = $row["MesNombre"];
+            $mes = $row["mesnombre"];
             $ano = $row["ano"];
             $mes = meses::NombreMes($mes) . "-" . $ano;
             $M2 = $M2;
@@ -291,18 +291,18 @@ if ($Glineas == 1 and $TipoInfo == 1) {
 
         do {
             $rowT = pg_fetch_array($respT);
-            $IdMedicinaTemp = $rowT["IdMedicina"];
-            $IdMedicinaAct = $row["IdMedicina"];
-            $IdMedicinaPu = $rowPu["IdMedicina"];
+            $IdMedicinaTemp = $rowT["idmedicina"];
+            $IdMedicinaAct = $row["idmedicina"];
+            $IdMedicinaPu = $rowPu["idmedicina"];
 
-            $Nombre = $row["Nombre"];
-            $Presentacion = $row["FormaFarmaceutica"];
-            $Concentracion = $row["Concentracion"];
-            $M2 = $row["Suma"];
+            $Nombre = $row["nombre"];
+            $Presentacion = $row["formafarmaceutica"];
+            $Concentracion = $row["concentracion"];
+            $M2 = $row["suma"];
 //$T=$row2["Existencia"];
-            $mes = $row["MesNombre"];
-            $Divisor = $row["Divisor"];
-            $UnidadMedida = $row["Descripcion"];
+            $mes = $row["mesnombre"];
+            $Divisor = $row["divisor"];
+            $UnidadMedida = $row["descripcion"];
 
             $ano = $row["ano"];
             $mes = meses::NombreMes($mes) . "-" . $ano;
@@ -343,18 +343,18 @@ if ($Glineas == 1 and $TipoInfo == 2) {
 
         do {
             $rowT = pg_fetch_array($respT);
-            $IdMedicinaTemp = $rowT["IdMedicina"];
-            $IdMedicinaAct = $row["IdMedicina"];
-            $IdMedicinaPu = $rowPu["IdMedicina"];
+            $IdMedicinaTemp = $rowT["idmedicina"];
+            $IdMedicinaAct = $row["idmedicina"];
+            $IdMedicinaPu = $rowPu["idmedicina"];
 
-            $Nombre = $row["Nombre"];
-            $Presentacion = $row["FormaFarmaceutica"];
-            $Concentracion = $row["Concentracion"];
-            $M2 = $row["TotalRecetas"];
+            $Nombre = $row["nombre"];
+            $Presentacion = $row["formafarmaceutica"];
+            $Concentracion = $row["concentracion"];
+            $M2 = $row["totalrecetas"];
 //$T=$row2["Existencia"];
-            $mes = $row["MesNombre"];
+            $mes = $row["mesnombre"];
             $Divisor = $row["Divisor"];
-            $UnidadMedida = $row["Descripcion"];
+            $UnidadMedida = $row["descripcion"];
 
             $ano = $row["ano"];
             $mes = meses::NombreMes($mes) . "-" . $ano;
@@ -404,7 +404,7 @@ if (isset($_GET["Print"])) {
 
                 if ($row2 = pg_fetch_array($respuesta)) {
                     do {
-                        echo '<img src="imagenesGraficos/Pastel' . $row2["IdMedicina"] . '.png" style="border: 1px solid gray;"/> <br><br>';
+                        echo '<img src="imagenesGraficos/Pastel' . $row2["idmedicina"] . '.png" style="border: 1px solid gray;"/> <br><br>';
                     } while ($row2 = pg_fetch_array($respuesta));
                 } else {
                     echo "<div id='resp' align='center'><h3>No hay datos para ser graficados</h3></div>";
@@ -424,7 +424,7 @@ if (isset($_GET["Print"])) {
 
                 if ($row2 = pg_fetch_array($respuesta)) {
                     do {
-                        echo '<img src="imagenesGraficos/Barras' . $row2["IdMedicina"] . '.png" style="border: 1px solid gray;"/> <br><br>';
+                        echo '<img src="imagenesGraficos/Barras' . $row2["idmedicina"] . '.png" style="border: 1px solid gray;"/> <br><br>';
                     } while ($row2 = pg_fetch_array($respuesta));
                 } else {
                     echo "<div id='resp' align='center'><h3>No hay datos para ser graficados</h3></div>";
@@ -446,7 +446,7 @@ if (isset($_GET["Print"])) {
 
                 if ($row2 = pg_fetch_array($respuesta)) {
                     do {
-                        echo '<img src="imagenesGraficos/Lineas' . $row2["IdMedicina"] . '.png" style="border: 1px solid gray;"/> <br><br>';
+                        echo '<img src="imagenesGraficos/Lineas' . $row2["idmedicina"] . '.png" style="border: 1px solid gray;"/> <br><br>';
                     } while ($row2 = pg_fetch_array($respuesta));
                 } else {
                     echo "<div id='resp' align='center'><h3>No hay datos para ser graficados</h3></div>";

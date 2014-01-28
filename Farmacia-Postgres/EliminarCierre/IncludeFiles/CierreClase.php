@@ -4,9 +4,9 @@ class Proceso{
 	function CargarCierres($IdEstablecimiento,$IdModalidad){
 		$query="select *
 			from farm_cierre
-			where left(MesCierre,4) not in (select AnoCierre 
+			where left(MesCierre,4)::int not in (select AnoCierre 
 							from farm_cierre 
-							where (AnoCierre is not null or AnoCierre <> '')
+							where (AnoCierre is not null)
                                                         and IdModalidad=$IdModalidad
 							)
                         and farm_cierre.IdEstablecimiento=$IdEstablecimiento
@@ -20,7 +20,7 @@ class Proceso{
 
 
 	function EliminarCierre($IdCierre,$IdEstablecimiento,$IdModalidad){
-		$query="delete from farm_cierre where IdCierre=".$IdCierre." 
+		$query="delete from farm_cierre where Id=".$IdCierre." 
                                                 and IdEstablecimiento=".$IdEstablecimiento." 
                                                 and IdModalidad=$IdModalidad";
 		if(pg_query($query)){

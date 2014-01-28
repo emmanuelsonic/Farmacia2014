@@ -107,13 +107,13 @@ if ($tabla == "mnt_grupoterapeutico") {
 if ($tabla == "farm_catalogoproductos") {
     $conexion = new conexion;
     $conexion->conectar();
-    $consulta = pg_query("SELECT $tabla.IdMedicina,$tabla.Nombre,$tabla.FormaFarmaceutica, $tabla.Concentracion, Presentacion
+    $consulta = pg_query("SELECT $tabla.id as IdMedicina,$tabla.Nombre,$tabla.FormaFarmaceutica, $tabla.Concentracion, Presentacion
 						   FROM $tabla
 						   inner join mnt_grupoterapeutico 
-						   on mnt_grupoterapeutico.IdTerapeutico=$tabla.IdTerapeutico
+						   on mnt_grupoterapeutico.Id=$tabla.IdTerapeutico
 						   inner join farm_catalogoproductosxestablecimiento fcpe
-						   on fcpe.IdMedicina=$tabla.IdMedicina
-						   WHERE mnt_grupoterapeutico.IdTerapeutico='$opcionSeleccionada' 
+						   on fcpe.IdMedicina=$tabla.Id
+						   WHERE mnt_grupoterapeutico.Id='$opcionSeleccionada' 
                                                    and fcpe.IdEstablecimiento=$IdEstablecimiento
                                                    and fcpe.IdModalidad=$IdModalidad
                                                    order by $tabla.Nombre") or die(pg_error());

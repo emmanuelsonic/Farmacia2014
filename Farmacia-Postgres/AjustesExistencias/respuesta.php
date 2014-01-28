@@ -24,8 +24,9 @@ where (Nombre like '%$Busqueda%' or Codigo='$Busqueda')
 and Condicion='H'
 and fcpe.IdEstablecimiento=".$_SESSION["IdEstablecimiento"]."
 and fcpe.IdModalidad=".$_SESSION["IdModalidad"]."
-and mnt_areamedicina.Id = ".$IdArea."
+--and mnt_areamedicina.Id = ".$IdArea."
 and IdTerapeutico is not null";
+echo $querySelect;
 	$resp=pg_query($querySelect);
 while($row=pg_fetch_array($resp)){
 	$Nombre=$row["nombre"]." - ".$row["concentracion"]." - ".$row["formafarmaceutica"]." - ".$row["presentacion"];
